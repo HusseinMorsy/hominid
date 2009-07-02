@@ -277,10 +277,10 @@ class Hominid
     end
   end
   
-  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true)
+  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = nil)
     # Subscribe a member
     begin
-      @chimpApi.call("listSubscribe", @api_key, list_id, email, user_info, email_type, @double_opt, update_existing, replace_interests)
+      @chimpApi.call("listSubscribe", @api_key, list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
     rescue
       false
     end
