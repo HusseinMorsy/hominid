@@ -5,14 +5,14 @@ class Hominid
   # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
   MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
   
-  def initialize
-    load_monkey_brains
+  def initialize(config=nil)
+    load_monkey_brains(config)
     @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
     return self
   end
   
-  def load_monkey_brains
-    config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys
+  def load_monkey_brains(config)
+    config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
     @chimpUsername  = config[:username].to_s
     @chimpPassword  = config[:password].to_s
     @api_key        = config[:api_key]
@@ -277,10 +277,10 @@ class Hominid
     end
   end
   
-  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true)
+  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = nil)
     # Subscribe a member
     begin
-      @chimpApi.call("listSubscribe", @api_key, list_id, email, user_info, email_type, @double_opt, update_existing, replace_interests)
+      @chimpApi.call("listSubscribe", @api_key, list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
     rescue
       false
     end
