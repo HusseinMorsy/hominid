@@ -4,8 +4,6 @@ Hominid is a GemPlugin wrapper to the "Mailchimp API":http://www.mailchimp.com/a
 
 h2. Installation
 
-There are a few options for installing Hominid.
-
 Install as a Rails plugin:
 
 <pre><code>script/plugin install git://github.com/bgetting/hominid.git</code></pre>
@@ -20,13 +18,19 @@ Use the GemPlugin:
 
 h2. Configuration
 
-Please note that Hominid expects to find a configuration file at @/config/hominid.yml@. If you are using Hominid as a GemPlugin, you will need to be sure and create this file. If you are using Hominid as a normal Rails plugin, this file will be created automatically when the plugin is installed. You will need to create a Mailchimp account and put your API key (available at "http://admin.mailchimp.com/account/api/":http://admin.mailchimp.com/account/api/) into the configuration file. 
+You can either use a master config file, which Hominid expects to find at @/config/hominid.yml@ or (thanks to "ron":http://github.com/ron) you can pass a hash of config options when calling Hominid. _If you are using Hominid as a Rails plugin, the config file will be created for you. If you are using Hominid as a gem, you will need to create the config file._
+
+You will also need to create a Mailchimp account to get your API key (available at "http://admin.mailchimp.com/account/api/":http://admin.mailchimp.com/account/api/) for configuration. 
 
 h2. Example
 
 To interact with the Mailchimp API, simply create a new Hominid object:
 
 <pre><code>@hominid = Hominid.new</code></pre>
+
+_or_
+
+<pre><code>@hominid = Hominid.new({:username => 'USERNAME', :password => 'PASSWORD', :api_key => 'API_KEY', :send_goodbye => false, :send_notify => false, :double_opt => false})</code></pre>
 
 First, locate the mailing list that you are going to be working with. If you know the mailing list ID, then you can use that directly. Or you can find a particular list by name using:
 
@@ -39,7 +43,7 @@ def find_list_id(list_name)
 end
 </code></pre>
 
-For example, to subscribe someone to a mailing list at Mailchimp:
+To subscribe someone to a mailing list at Mailchimp:
 
 <pre><code>@hominid.subscribe(@list_id, "email@example.com", {:FNAME => 'Bob', :LNAME => 'Smith'}, 'html')</code></pre>
 
@@ -61,11 +65,12 @@ Campaign methods are also supported. You can get all the campaigns for a particu
 
 Leave the @@list_id@ out and it will return all the campaigns for your Mailchimp account.
 
-
 h2. Other Stuff
 
-For the most part, this whole thing was an attempt to optimize the acts_as_mailchimp plugin, and incorporates all the great work from "C.G. Brown":http://www.projectlocker.com/ and "Kelly Mahan":http://digimedia.com/, as well as "Matthew Carlson":http://mandarinsoda.com/, whose plugin inspired nearly all of this work.
+For the most part, this whole thing was an attempt to optimize the acts_as_mailchimp plugin, and incorporates all the great work from "C.G. Brown":http://www.projectlocker.com/ and "Kelly Mahan":http://digimedia.com/, as well as "Matthew Carlson":http://mandarinsoda.com/, whose plugin inspired nearly all of this work. Recently, "ron":http://github.com/ron and "netguru":http://github.com/netguru have also provided useful changes as well.
 
-The Acts_As_Mailchimp plugin will be updated to utilize Hominid, so that there is still a way to add simple "acts_as" methods to a model. However, since Hominid is such a thin wrapper I encourage people to start experimenting with using the other methods to integrate newsletter marketing natively into their apps. Mailchimp put a lot of work into their API, so take advantage of it and make something cool!
+I encourage anyone using this gem to please fork it, improve it, and send me a pull request. I typically only use this gem in a minimal capacity, primarily for just managing whether or not a user is signed up for a mailing list. I do not intend to continue maintaining the "Acts As Mailchimp":http://github.com/bgetting/acts_as_mailchimp in the future, since I personally prefer to just use the Hominid gem.
+
+So please, help us to improve this gem!
 
 Copyright (c) 2009 Brian Getting, released under the MIT license.
