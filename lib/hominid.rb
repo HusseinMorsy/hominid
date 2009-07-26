@@ -1,18 +1,30 @@
 require 'xmlrpc/client'
 
+class HominidError < RuntimeError
+  def initialize(message)
+    super(message)
+  end
+end
+
+class HominidCommunicationError < HominidError
+  def initialize(message)
+    super(message)
+  end
+end
+
 class Hominid
   
   # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
   MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
   
-  def initialize(config=nil)
+  def initialize(config = nil)
     load_monkey_brains(config)
     @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-    return self
   end
   
   def load_monkey_brains(config)
     config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
+    
     @chimpUsername  = config[:username].to_s
     @chimpPassword  = config[:password].to_s
     @api_key        = config[:api_key]
@@ -44,7 +56,7 @@ class Hominid
   def api_keys(include_expired = false)
     begin
       @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-      @api_keys = @chimpApi.call("apikeys", @chimpUsername, @chimpPassword, @api_key, include_expired)
+      @api_keys = @chimpApi.call("apikeys", @chimpUsername, @chimpPassword, include_expired)
     rescue
       return nil
     end
@@ -54,11 +66,7 @@ class Hominid
   
   def campaign_content(campaign_id)
     # Get the content of a campaign
-    begin
-      @content = @chimpApi.call("campaignContent", @api_key, campaign_id)
-    rescue
-      return nil
-    end
+    @content = call("campaignContent", campaign_id)
   end
   
   def campaigns(filters = {}, start = 0, limit = 50)
@@ -76,178 +84,102 @@ class Hominid
     #   :sedtime_start  = (string)  Show campaigns sent after YYYY-MM-DD HH:mm:ss.
     #   :sendtime_end   = (string)  Show campaigns sent before YYYY-MM-DD HH:mm:ss.
     #   :subject        = (boolean) Filter by exact values, or search within content for filter values.
-    begin
-      @campaigns = @chimpApi.call("campaigns", @api_key, filters, start, limit)
-    rescue
-      return nil
-    end
+    @campaigns = call("campaigns", filters, start, limit)
   end
   
   def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
     # Create a new campaign
-    begin
-      @campaign = @chimpApi.call("campaignCreate", @api_key, type, options, content, segment_options, type_opts)
-    rescue
-      return nil
-    end
+    @campaign = call("campaignCreate", type, options, content, segment_options, type_opts)
   end
   
   def delete_campaign(campaign_id)
     # Delete a campaign
-    begin
-      @campaign = @chimpApi.call("campaignDelete", @api_key, campaign_id)
-    rescue
-      false
-    end
+    @campaign = call("campaignDelete", campaign_id)
   end
   
   def replicate_campaign(campaign_id)
     # Replicate a campaign (returns ID of new campaign)
-    begin
-      @campaign = @chimpApi.call("campaignReplicate", @api_key, campaign_id)
-    rescue
-      false
-    end
+    @campaign = call("campaignReplicate", campaign_id)
   end
   
   def schedule_campaign(campaign_id, time = "#{1.day.from_now}")
     # Schedule a campaign
     ## TODO: Add support for A/B Split scheduling
-    begin
-      @chimpApi.call("campaignSchedule", @api_key, campaign_id, time)
-    rescue
-      false
-    end
+    call("campaignSchedule", campaign_id, time)
   end
   
   def send_now(campaign_id)
     # Send a campaign
-    begin
-      @chimpApi.call("campaignSendNow", @api_key, campaign_id)
-    rescue
-      false
-    end
+    call("campaignSendNow", campaign_id)
   end
   
   def send_test(campaign_id, emails = {})
     # Send a test of a campaign
-    begin
-      @chimpApi.call("campaignSendTest", @api_key, campaign_id, emails)
-    rescue
-      false
-    end
+    call("campaignSendTest", campaign_id, emails)
   end
   
   def templates
     # Get the templates
-    begin
-      @templates = @chimpApi.call("campaignTemplates", @api_key)
-    rescue
-      return nil
-    end
+    @templates = call("campaignTemplates", @api_key)
   end
   
   def update_campaign(campaign_id, name, value)
     # Update a campaign
-    begin
-      @chimpApi.call("campaignUpdate", @api_key, campaign_id, name, value)
-    rescue
-      false
-    end
+    call("campaignUpdate", campaign_id, name, value)
   end
   
   def unschedule_campaign(campaign_id)
     # Unschedule a campaign
-    begin
-      @chimpApi.call("campaignUnschedule", @api_key, campaign_id)
-    rescue
-      false
-    end
+    call("campaignUnschedule", campaign_id)
   end
   
   ## Helper methods
   
   def html_to_text(content)
     # Convert HTML content to text
-    begin
-      @html_to_text = @chimpApi.call("generateText", @api_key, 'html', content)
-    rescue
-      return nil
-    end
+    @html_to_text = call("generateText", 'html', content)
   end
   
   def convert_css_to_inline(html, strip_css = false)
     # Convert CSS styles to inline styles and (optionally) remove original styles
-    begin
-      @html_to_text = @chimpApi.call("inlineCss", @api_key, html, strip_css)
-    rescue
-      return nil
-    end
+    @html_to_text = call("inlineCss", html, strip_css)
   end
   
   ## List related methods
   
   def lists
     # Get all of the lists for this mailchimp account
-    begin
-      @lists = @chimpApi.call("lists", @api_key)
-    rescue
-      return nil
-    end
+    @lists = call("lists", @api_key)
   end
   
   def create_group(list_id, group)
     # Add an interest group to a list
-    begin
-      @chimpApi.call("listInterestGroupAdd", @api_key, list_id, group)
-    rescue
-      false
-    end
+    call("listInterestGroupAdd", list_id, group)
   end
   
   def create_tag(list_id, tag, name, required = false)
     # Add a merge tag to a list
-    begin
-      @chimpApi.call("listMergeVarAdd", @api_key, list_id, tag, name, required)
-    rescue
-      false
-    end
+    call("listMergeVarAdd", list_id, tag, name, required)
   end
   
   def delete_group(list_id, group)
     # Delete an interest group for a list
-    begin
-      @chimpApi.call("listInterestGroupDel", @api_key, list_id, group)
-    rescue
-      false
-    end
+    call("listInterestGroupDel", list_id, group)
   end
   
   def delete_tag(list_id, tag)
     # Delete a merge tag and all its members
-    begin
-      @chimpApi.call("listMergeVarDel", @api_key, list_id, tag)
-    rescue
-      false
-    end
+    call("listMergeVarDel", list_id, tag)
   end
   
   def groups(list_id)
     # Get the interest groups for a list
-    begin
-      @groups = @chimpApi.call("listInterestGroups", @api_key, list_id)
-    rescue
-      return nil
-    end
+    @groups = call("listInterestGroups", list_id)
   end
   
   def member(list_id, email)
     # Get a member of a list
-    begin
-      @member = @chimpApi.call("listMemberInfo", @api_key, list_id, email)
-    rescue
-      return nil
-    end
+    @member = call("listMemberInfo", list_id, email)
   end
   
   def members(list_id, status = "subscribed", since = "2000-01-01 00:00:00", start = 0, limit = 100)
@@ -261,67 +193,47 @@ class Hominid
     # Select members that have updated their status or profile by providing
     # a "since" date in the format of YYYY-MM-DD HH:MM:SS
     # 
-    begin
-      @members = @chimpApi.call("listMembers", @api_key, list_id, status, since, start, limit)
-    rescue
-      return nil
-    end
+    @members = call("listMembers", list_id, status, since, start, limit)
   end
   
   def merge_tags(list_id)
     # Get the merge tags for a list
-    begin
-      @merge_tags = @chimpApi.call("listMergeVars", @api_key, list_id)
-    rescue
-      return nil
-    end
+    @merge_tags = call("listMergeVars", list_id)
   end
   
   def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = nil)
     # Subscribe a member
-    begin
-      @chimpApi.call("listSubscribe", @api_key, list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
-    rescue
-      false
-    end
+    call("listSubscribe", list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
   end
   
   def subscribe_many(list_id, subscribers)
     # Subscribe a batch of members
     # subscribers = {:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'} 
-    begin
-      @chimpApi.call("listBatchSubscribe", @api_key, list_id, subscribers, @double_opt, true)
-    rescue
-      false
-    end
+    call("listBatchSubscribe", list_id, subscribers, @double_opt, true)
   end
   
   def unsubscribe(list_id, current_email)
     # Unsubscribe a list member
-    begin
-      @chimpApi.call("listUnsubscribe", @api_key, list_id, current_email, true, @send_goodbye, @send_notify)
-    rescue
-      false
-    end
+    call("listUnsubscribe", list_id, current_email, true, @send_goodbye, @send_notify)
   end
   
   def unsubscribe_many(list_id, emails)
     # Unsubscribe an array of email addresses
     # emails = ['first@email.com', 'second@email.com'] 
-    begin
-      @chimpApi.call("listBatchUnsubscribe", @api_key, list_id, emails, true, @send_goodbye, @send_notify)
-    rescue
-      false
-    end
+    call("listBatchUnsubscribe", list_id, emails, true, @send_goodbye, @send_notify)
   end
   
   def update_member(list_id, current_email, user_info = {}, email_type = "")
     # Update a member of this list
-    begin
-      @chimpApi.call("listUpdateMember", @api_key, list_id, current_email, user_info, email_type, true)
-    rescue
-      false
-    end
+    call("listUpdateMember", list_id, current_email, user_info, email_type, true)
   end
-
+  
+  protected
+  def call(method, *args)
+    @chimpApi.call(method, @api_key, *args)
+  rescue XMLRPC::FaultException => error
+    raise HominidError.new(error.message)
+  rescue Exception => error
+    raise HominidCommunicationError.new(error.message)
+  end
 end
