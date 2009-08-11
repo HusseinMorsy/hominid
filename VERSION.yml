@@ -1,8 +1,4 @@
 --- 
 :major: 1
 :minor: 1
-<<<<<<< HEAD:VERSION.yml
-:patch: 7
-=======
-:patch: 5
->>>>>>> 1af71e26fd139e380d1e267bb0959786ec218e36:VERSION.yml
+:patch: 8
