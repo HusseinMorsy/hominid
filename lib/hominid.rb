@@ -86,7 +86,32 @@ class Hominid
     #   :subject        = (boolean) Filter by exact values, or search within content for filter values.
     @campaigns = call("campaigns", filters, start, limit)
   end
-  
+
+  # Attach Ecommerce Order Information to a Campaign.
+  # The order hash should be structured as follows: 
+  #
+  #   :id             = (string)  the order id 
+  #   :campaign_id    = (string)  the campaign id to track the order (mc_cid query string). 
+  #   :email_id       = (string)  email id of the subscriber (mc_eid query string)
+  #   :total          = (double)  Show only campaigns with this from_name.
+  #   :shipping       = (string)  *optional - the total paid for shipping fees.
+  #   :tax            = (string)  *optional - the total tax paid.
+  #   :store_id       = (string)  a unique id for the store sending the order in
+  #   :store_name     = (string)  *optional - A readable name for the store, typicaly the hostname.
+  #   :plugin_id      = (string)  the MailChimp-assigned Plugin Id. Using 1214 for the moment. 
+  #   :items          = (array)   the individual line items for an order, using the following keys:
+  #     
+  #     :line_num      = (integer) *optional - line number of the item on the order
+  #     :product_id    = (integer) internal product id
+  #     :product_name  = (string)  the name for the product_id associated with the item
+  #     :category_id   = (integer) internal id for the (main) category associated with product
+  #     :category_name = (string)  the category name for the category id
+  #     :qty           = (double)  the quantity of items ordered
+  #     :cost          = (double)  the cost of a single item (i.e., not the extended cost of the line)
+  def campaign_ecomm_add_order(order)
+    @campaign = call("campaignEcommAddOrder", order)
+  end
+
   def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
     # Create a new campaign
     @campaign = call("campaignCreate", type, options, content, segment_options, type_opts)
