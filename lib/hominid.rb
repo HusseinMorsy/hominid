@@ -16,15 +16,14 @@ class Hominid
   
   # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
   MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
-  
+
   def initialize(config = nil)
     load_monkey_brains(config)
     @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
   end
-  
+
   def load_monkey_brains(config)
     config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
-    
     @chimpUsername  = config[:username].to_s
     @chimpPassword  = config[:password].to_s
     @api_key        = config[:api_key]
