@@ -1,26 +1,27 @@
 h1. Hominid
 
-Hominid is a GemPlugin wrapper to the "Mailchimp API":http://www.mailchimp.com/api/1.2/.
+Hominid is a Ruby gem for interacting with the "Mailchimp API":http://www.mailchimp.com/api/1.2/.
 
 h2. Installation
 
-Install as a Rails plugin:
+Install the gem:
 
-<pre><code>script/plugin install git://github.com/bgetting/hominid.git</code></pre>
+<pre><code>gem sources -a http://gems.github.com
+sudo gem install bgetting-hominid</code></pre>
 
-Clone from the Github repository:
-
-<pre><code>git clone git://github.com/bgetting/hominid.git</code></pre>
-
-Use the GemPlugin:
+In your @environment.rb@ file:
 
 <pre><code>config.gem "bgetting-hominid", :lib => 'hominid', :source => "http://gems.github.com"</code></pre>
 
-h2. Configuration
+You can also install Hominid as a Rails plugin:
 
-You can either use a master config file, which Hominid expects to find at @/config/hominid.yml@ or (thanks to "ron":http://github.com/ron) you can pass a hash of config options when calling Hominid. _If you are using Hominid as a Rails plugin, the config file will be created for you. If you are using Hominid as a gem, you will need to create the config file._
+<pre><code>script/plugin install git://github.com/bgetting/hominid.git</code></pre>
 
-You will also need to create a Mailchimp account to get your API key (available at "http://admin.mailchimp.com/account/api/":http://admin.mailchimp.com/account/api/) for configuration. 
+h2. Setup
+
+Hominid expects to find a config file at @/config/hominid.yml@ in a Rails application, but you can also pass a hash of config options when creating a new Hominid object (thanks to "ron":http://github.com/ron).
+
+You will also need to create a Mailchimp account to get your API key (available at "http://admin.mailchimp.com/account/api/":http://admin.mailchimp.com/account/api/) to configure a Hominid object. 
 
 h2. Example
 
@@ -43,15 +44,15 @@ def find_list_id(list_name)
 end
 </code></pre>
 
-To subscribe someone:
+To subscribe:
 
 <pre><code>@hominid.subscribe(@list_id, "email@example.com", {:FNAME => 'Bob', :LNAME => 'Smith'}, 'html')</code></pre>
 
-To unsubscribe someone:
+To unsubscribe:
 
 <pre><code>@hominid.unsubscribe(@list_id, "email@example.com")</code></pre>
 
-To update a list member:
+To update a member:
 
 <pre><code>@hominid.subscribe(@list_id, "email@example.com", {:FNAME => 'Robert', :EMAIL => 'another@example.com'}, 'html', true)</code></pre>
 
