@@ -29,7 +29,7 @@ class Hominid
     @api_key        = config[:api_key]
     @send_goodbye   = config[:send_goodbye]
     @send_notify    = config[:send_notify]
-    @double_opt     = config[:double_opt]
+    @double_opt     = config[:double_opt] || false
   end
   
   ## Security related methods
@@ -225,7 +225,7 @@ class Hominid
     @merge_tags = call("listMergeVars", list_id)
   end
   
-  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = nil)
+  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = false)
     # Subscribe a member
     call("listSubscribe", list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
   end
