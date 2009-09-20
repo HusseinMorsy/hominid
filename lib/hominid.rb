@@ -21,7 +21,7 @@ class Hominid
     config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
     config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
     defaults = {:send_welcome => false, :double_opt_in => false, :update_existing => true, :replace_interests => true, :user_info => {}}
-    @config = config.reverse_merge(defaults).freeze
+    @config = defaults.merge(config).freeze
     @chimpApi = XMLRPC::Client.new2(MAILCHIMP_API)
   end
 
@@ -205,26 +205,26 @@ class Hominid
   end
   
   def subscribe(list_id, email, options = {})
-    options = apply_defaults_to(options.reverse_merge(:email_type => "html"))
+    options = apply_defaults_to({:email_type => "html"}.merge(options))
     # Subscribe a member
     call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests, :send_welcome))
   end
   
   def subscribe_many(list_id, subscribers, options = {})
-    options = apply_defaults_to(options.reverse_merge(:update_existing => true))
+    options = apply_defaults_to({:update_existing => true}.merge(options))
     # Subscribe a batch of members
     # subscribers = {:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'} 
     call("listBatchSubscribe", list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
   end
   
   def unsubscribe(list_id, current_email, options = {})
-    options = apply_defaults_to(options.reverse_merge(:delete_member => true))
+    options = apply_defaults_to({:delete_member => true}.merge(options))
     # Unsubscribe a list member
     call("listUnsubscribe", list_id, current_email, *options.values_at(:delete_member, :send_goodbye, :send_notify))
   end
   
   def unsubscribe_many(list_id, emails, options = {})
-    options = apply_defaults_to(options.reverse_merge(:delete_member => true))
+    options = apply_defaults_to({:delete_member => true}.merge(options))
     # Unsubscribe an array of email addresses
     # emails = ['first@email.com', 'second@email.com'] 
     call("listBatchUnsubscribe", list_id, emails, *options.values_at(:delete_member, :send_goodbye, :send_notify))
@@ -237,7 +237,7 @@ class Hominid
   
   protected
   def apply_defaults_to(options)
-    options.reverse_merge!(@config)
+    @config.merge(options)
   end
 
   def call(method, *args)
