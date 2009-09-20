@@ -36,7 +36,8 @@ class Hominid
   end
   
   def api_keys(include_expired = false)
-    @chimpApi.call("apikeys", *@config.values_at(:username, :password), include_expired)
+    username, password = *@config.values_at(:username, :password)
+    @chimpApi.call("apikeys", username, password, include_expired)
   end
   
   ## Campaign related methods
