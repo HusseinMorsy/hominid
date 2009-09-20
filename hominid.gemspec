@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
      "README.textile"
   ]
   s.files = [
-    "README.textile",
+    "LICENSE",
+     "README.textile",
      "Rakefile",
      "VERSION.yml",
      "hominid.gemspec",
