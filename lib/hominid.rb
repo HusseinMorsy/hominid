@@ -48,7 +48,7 @@ class Hominid
   
   def campaign_content(campaign_id)
     # Get the content of a campaign
-    @content = call("campaignContent", campaign_id)
+    call("campaignContent", campaign_id)
   end
   
   def campaigns(filters = {}, start = 0, limit = 50)
@@ -66,7 +66,7 @@ class Hominid
     #   :sedtime_start  = (string)  Show campaigns sent after YYYY-MM-DD HH:mm:ss.
     #   :sendtime_end   = (string)  Show campaigns sent before YYYY-MM-DD HH:mm:ss.
     #   :subject        = (boolean) Filter by exact values, or search within content for filter values.
-    @campaigns = call("campaigns", filters, start, limit)
+    call("campaigns", filters, start, limit)
   end
 
   # Attach Ecommerce Order Information to a Campaign.
@@ -91,22 +91,22 @@ class Hominid
   #     :qty           = (double)  the quantity of items ordered
   #     :cost          = (double)  the cost of a single item (i.e., not the extended cost of the line)
   def campaign_ecomm_add_order(order)
-    @campaign = call("campaignEcommAddOrder", order)
+    call("campaignEcommAddOrder", order)
   end
 
   def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
     # Create a new campaign
-    @campaign = call("campaignCreate", type, options, content, segment_options, type_opts)
+    call("campaignCreate", type, options, content, segment_options, type_opts)
   end
   
   def delete_campaign(campaign_id)
     # Delete a campaign
-    @campaign = call("campaignDelete", campaign_id)
+    call("campaignDelete", campaign_id)
   end
   
   def replicate_campaign(campaign_id)
     # Replicate a campaign (returns ID of new campaign)
-    @campaign = call("campaignReplicate", campaign_id)
+    call("campaignReplicate", campaign_id)
   end
   
   def schedule_campaign(campaign_id, time = "#{1.day.from_now}")
@@ -127,7 +127,7 @@ class Hominid
   
   def templates
     # Get the templates
-    @templates = call("campaignTemplates", @api_key)
+    call("campaignTemplates", @api_key)
   end
   
   def update_campaign(campaign_id, name, value)
@@ -144,19 +144,19 @@ class Hominid
   
   def html_to_text(content)
     # Convert HTML content to text
-    @html_to_text = call("generateText", 'html', content)
+    call("generateText", 'html', content)
   end
   
   def convert_css_to_inline(html, strip_css = false)
     # Convert CSS styles to inline styles and (optionally) remove original styles
-    @html_to_text = call("inlineCss", html, strip_css)
+    call("inlineCss", html, strip_css)
   end
   
   ## List related methods
   
   def lists
     # Get all of the lists for this mailchimp account
-    @lists = call("lists", @api_key)
+    call("lists", @api_key)
   end
   
   def create_group(list_id, group)
@@ -181,12 +181,12 @@ class Hominid
   
   def groups(list_id)
     # Get the interest groups for a list
-    @groups = call("listInterestGroups", list_id)
+    call("listInterestGroups", list_id)
   end
   
   def member(list_id, email)
     # Get a member of a list
-    @member = call("listMemberInfo", list_id, email)
+    call("listMemberInfo", list_id, email)
   end
   
   def members(list_id, status = "subscribed", since = "2000-01-01 00:00:00", start = 0, limit = 100)
@@ -200,12 +200,12 @@ class Hominid
     # Select members that have updated their status or profile by providing
     # a "since" date in the format of YYYY-MM-DD HH:MM:SS
     # 
-    @members = call("listMembers", list_id, status, since, start, limit)
+    call("listMembers", list_id, status, since, start, limit)
   end
   
   def merge_tags(list_id)
     # Get the merge tags for a list
-    @merge_tags = call("listMergeVars", list_id)
+    call("listMergeVars", list_id)
   end
   
   def subscribe(list_id, email, options = {})
