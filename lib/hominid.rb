@@ -17,8 +17,10 @@ class Hominid
   # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
   MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
 
-  def initialize(config = nil)
-    config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
+  def initialize(config = {})
+    if defined?(RAILS_ROOT) && (!config || config.empty?)
+      config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys
+    end
     config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
     defaults = {:send_welcome => false, :double_opt_in => false, :update_existing => true, :replace_interests => true, :user_info => {}}
     @config = defaults.merge(config).freeze
