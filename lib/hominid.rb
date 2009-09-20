@@ -30,7 +30,7 @@ class Hominid
     @send_welcome   = config[:send_welcome] || false
     @send_goodbye   = config[:send_goodbye]
     @send_notify    = config[:send_notify]
-    @double_opt     = config[:double_opt] || false
+    @double_opt_in  = config[:double_opt_in] || false
   end
   
   ## Security related methods
@@ -227,15 +227,16 @@ class Hominid
   end
   
   def subscribe(list_id, email, options = {})
-    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt, :send_welcome => @send_welcom)
+    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt_in, :send_welcome => @send_welcom)
     # Subscribe a member
     call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests, :send_welcome))
   end
   
-  def subscribe_many(list_id, subscribers)
+  def subscribe_many(list_id, subscribers, options = {})
+    options.revese_merge!(default_options.slice())
     # Subscribe a batch of members
     # subscribers = {:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'} 
-    call("listBatchSubscribe", list_id, subscribers, @double_opt, true)
+    call("listBatchSubscribe", list_id, subscribers, @double_opt_in, true)
   end
   
   def unsubscribe(list_id, current_email)
