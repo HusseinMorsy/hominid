@@ -18,11 +18,6 @@ class Hominid
   MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
 
   def initialize(config = nil)
-    load_monkey_brains(config)
-    @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-  end
-
-  def load_monkey_brains(config)
     config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
     @chimpUsername  = config[:username].to_s
     @chimpPassword  = config[:password].to_s
@@ -31,8 +26,9 @@ class Hominid
     @send_goodbye   = config[:send_goodbye]
     @send_notify    = config[:send_notify]
     @double_opt_in  = config[:double_opt_in] || false
+    @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
   end
-  
+
   ## Security related methods
   
   def add_api_key
