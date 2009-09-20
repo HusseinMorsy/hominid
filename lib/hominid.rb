@@ -27,35 +27,21 @@ class Hominid
     @send_notify    = config[:send_notify]
     @double_opt_in  = config[:double_opt_in] || false
     @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
+    @chimpApi = XMLRPC::Client.new2(MAILCHIMP_API)
   end
 
   ## Security related methods
   
   def add_api_key
-    begin
-      @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-      @chimpApi.call("apikeyAdd", @chimpUsername, @chimpPassword, @api_key)
-    rescue
-      false
-    end
+    @chimpApi.call("apikeyAdd", *@config.values_at(:username, :password, :api_key))
   end
   
   def expire_api_key
-    begin
-      @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-      @chimpApi.call("apikeyExpire", @chimpUsername, @chimpPassword, @api_key)
-    rescue
-      false
-    end
+    @chimpApi.call("apikeyExpire", *@config.values_at(:username, :password, :api_key))
   end
   
   def api_keys(include_expired = false)
-    begin
-      @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
-      @api_keys = @chimpApi.call("apikeys", @chimpUsername, @chimpPassword, include_expired)
-    rescue
-      return nil
-    end
+    @chimpApi.call("apikeys", *@config.values_at(:username, :password), include_expired)
   end
   
   ## Campaign related methods
