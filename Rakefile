@@ -1,5 +1,4 @@
 require 'rake'
-require 'rake/testtask'
 require 'rake/rdoctask'
 
 begin
@@ -14,17 +13,6 @@ begin
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
-end
-
-desc 'Default: run unit tests.'
-task :default => :test
-
-desc 'Test the hominid plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
 end
 
 desc 'Generate documentation for the hominid plugin.'
