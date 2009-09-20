@@ -123,7 +123,7 @@ class Hominid
   
   def templates
     # Get the templates
-    call("campaignTemplates", @api_key)
+    call("campaignTemplates")
   end
   
   def update_campaign(campaign_id, name, value)
@@ -152,7 +152,7 @@ class Hominid
   
   def lists
     # Get all of the lists for this mailchimp account
-    call("lists", @api_key)
+    call("lists")
   end
   
   def create_group(list_id, group)
@@ -241,10 +241,10 @@ class Hominid
   end
 
   def call(method, *args)
-    @chimpApi.call(method, @api_key, *args)
   rescue XMLRPC::FaultException => error
     raise HominidError.new(error.message)
   rescue Exception => error
     raise HominidCommunicationError.new(error.message)
+    @chimpApi.call(method, @config[:api_key], *args)
   end
 end
