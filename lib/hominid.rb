@@ -19,14 +19,9 @@ class Hominid
 
   def initialize(config = nil)
     config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys unless config
-    @chimpUsername  = config[:username].to_s
-    @chimpPassword  = config[:password].to_s
-    @api_key        = config[:api_key]
-    @send_welcome   = config[:send_welcome] || false
-    @send_goodbye   = config[:send_goodbye]
-    @send_notify    = config[:send_notify]
-    @double_opt_in  = config[:double_opt_in] || false
-    @chimpApi ||= XMLRPC::Client.new2(MAILCHIMP_API)
+    config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
+    defaults = {:send_welcome => false, :double_opt_in => false, :update_existing => true, :replace_interests => true, :user_info => {}}
+    @config = config.reverse_merge(defaults).freeze
     @chimpApi = XMLRPC::Client.new2(MAILCHIMP_API)
   end
 
@@ -209,27 +204,29 @@ class Hominid
   end
   
   def subscribe(list_id, email, options = {})
-    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt_in, :send_welcome => @send_welcom)
+    options = apply_defaults_to(options.reverse_merge(:email_type => "html"))
     # Subscribe a member
     call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests, :send_welcome))
   end
   
   def subscribe_many(list_id, subscribers, options = {})
-    options.revese_merge!(default_options.slice())
+    options = apply_defaults_to(options.reverse_merge(:update_existing => true))
     # Subscribe a batch of members
     # subscribers = {:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'} 
-    call("listBatchSubscribe", list_id, subscribers, @double_opt_in, true)
+    call("listBatchSubscribe", list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
   end
   
-  def unsubscribe(list_id, current_email)
+  def unsubscribe(list_id, current_email, options = {})
+    options = apply_defaults_to(options.reverse_merge(:delete_member => true))
     # Unsubscribe a list member
-    call("listUnsubscribe", list_id, current_email, true, @send_goodbye, @send_notify)
+    call("listUnsubscribe", list_id, current_email, *options.values_at(:delete_member, :send_goodbye, :send_notify))
   end
   
-  def unsubscribe_many(list_id, emails)
+  def unsubscribe_many(list_id, emails, options = {})
+    options = apply_defaults_to(options.reverse_merge(:delete_member => true))
     # Unsubscribe an array of email addresses
     # emails = ['first@email.com', 'second@email.com'] 
-    call("listBatchUnsubscribe", list_id, emails, true, @send_goodbye, @send_notify)
+    call("listBatchUnsubscribe", list_id, emails, *options.values_at(:delete_member, :send_goodbye, :send_notify))
   end
   
   def update_member(list_id, current_email, user_info = {}, email_type = "")
@@ -238,6 +235,10 @@ class Hominid
   end
   
   protected
+  def apply_defaults_to(options)
+    options.reverse_merge!(@config)
+  end
+
   def call(method, *args)
     @chimpApi.call(method, @api_key, *args)
   rescue XMLRPC::FaultException => error
