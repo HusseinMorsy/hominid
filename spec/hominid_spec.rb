@@ -18,4 +18,12 @@ describe Hominid do
       end
     end
   end
+
+  describe "#call" do
+    it "should raise HominidError on failure" do
+      proc {
+        Hominid.new.send(:call, 'bogusApi')
+      }.should raise_error(HominidError)
+    end
+  end
 end
