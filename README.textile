@@ -46,7 +46,7 @@ end
 
 To subscribe:
 
-<pre><code>@hominid.subscribe(@list_id, "email@example.com", {:FNAME => 'Bob', :LNAME => 'Smith'}, 'html')</code></pre>
+<pre><code>@hominid.subscribe(@list_id, "email@example.com", :user_info => {:FNAME => 'Bob', :LNAME => 'Smith'}, :email_type => 'html')</code></pre>
 
 To unsubscribe:
 
@@ -54,7 +54,7 @@ To unsubscribe:
 
 To update a member:
 
-<pre><code>@hominid.subscribe(@list_id, "email@example.com", {:FNAME => 'Robert', :EMAIL => 'another@example.com'}, 'html', true)</code></pre>
+<pre><code>@hominid.subscribe(@list_id, "email@example.com", :user_info => {:FNAME => 'Robert', :EMAIL => 'another@example.com'}, :email_type => 'html', :update_existing => true)</code></pre>
 
 _or_
 

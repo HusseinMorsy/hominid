@@ -225,9 +225,10 @@ class Hominid
     @merge_tags = call("listMergeVars", list_id)
   end
   
-  def subscribe(list_id, email, user_info = {}, email_type = "html", update_existing = true, replace_interests = true, double_opt_in = false)
+  def subscribe(list_id, email, options = {})
+    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt)
     # Subscribe a member
-    call("listSubscribe", list_id, email, user_info, email_type, double_opt_in || @double_opt, update_existing, replace_interests)
+    call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests))
   end
   
   def subscribe_many(list_id, subscribers)
