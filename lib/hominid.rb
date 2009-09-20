@@ -27,6 +27,7 @@ class Hominid
     @chimpUsername  = config[:username].to_s
     @chimpPassword  = config[:password].to_s
     @api_key        = config[:api_key]
+    @send_welcome   = config[:send_welcome] || false
     @send_goodbye   = config[:send_goodbye]
     @send_notify    = config[:send_notify]
     @double_opt     = config[:double_opt] || false
@@ -226,9 +227,9 @@ class Hominid
   end
   
   def subscribe(list_id, email, options = {})
-    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt)
+    options.reverse_merge!(:user_info => {}, :email_type => "html", :update_existing => true, :replace_interests => true, :double_opt_in => @double_opt, :send_welcome => @send_welcom)
     # Subscribe a member
-    call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests))
+    call("listSubscribe", list_id, email, *options.values_at(:user_info, :email_type, :double_opt_in, :update_existing, :replace_interests, :send_welcome))
   end
   
   def subscribe_many(list_id, subscribers)
