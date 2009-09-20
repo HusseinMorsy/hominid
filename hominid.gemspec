@@ -13,11 +13,11 @@ Gem::Specification.new do |s|
   s.description = %q{Hominid is a Rails GemPlugin for interacting with the Mailchimp API}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
-    "README.textile"
+    "LICENSE",
+     "README.textile"
   ]
   s.files = [
-    "MIT-LICENSE",
-     "README.textile",
+    "README.textile",
      "Rakefile",
      "VERSION.yml",
      "hominid.gemspec",
