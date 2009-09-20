@@ -241,10 +241,10 @@ class Hominid
   end
 
   def call(method, *args)
+    @chimpApi.call(method, @config[:api_key], *args)
   rescue XMLRPC::FaultException => error
     raise HominidError.new(error.message)
   rescue Exception => error
     raise HominidCommunicationError.new(error.message)
-    @chimpApi.call(method, @config[:api_key], *args)
   end
 end
