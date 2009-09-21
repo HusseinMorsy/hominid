@@ -9,19 +9,17 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Getting"]
-  s.date = %q{2009-09-20}
+  s.date = %q{2009-09-21}
   s.description = %q{Hominid is a Rails GemPlugin for interacting with the Mailchimp API}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
-    "LICENSE",
-     "README.textile"
+    "README.textile"
   ]
   s.files = [
-    "LICENSE",
+    "MIT-LICENSE",
      "README.textile",
      "Rakefile",
      "VERSION.yml",
-     "hominid.gemspec",
      "hominid.yml.tpl",
      "init.rb",
      "install.rb",
