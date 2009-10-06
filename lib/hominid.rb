@@ -44,6 +44,11 @@ class Hominid
   
   ## Campaign related methods
   
+  def campaign_stats(campaign_id)
+    # Get the stats of a campaign
+    call("campaignStats", campaign_id)
+  end
+  
   def campaign_content(campaign_id)
     # Get the content of a campaign
     call("campaignContent", campaign_id)
