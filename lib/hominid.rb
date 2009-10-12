@@ -49,9 +49,11 @@ class Hominid
     call("campaignStats", campaign_id)
   end
   
-  def campaign_content(campaign_id)
+  def campaign_content(campaign_id, for_archive = true)
     # Get the content of a campaign
-    call("campaignContent", campaign_id)
+    #
+    # for_archive controls whether we return the Archive version (true) or the Raw version (false), defaults to true
+    call("campaignContent", campaign_id, for_archive)
   end
   
   def campaigns(filters = {}, start = 0, limit = 50)
