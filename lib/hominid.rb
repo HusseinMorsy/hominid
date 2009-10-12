@@ -226,6 +226,12 @@ class Hominid
     call("listBatchSubscribe", list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
   end
   
+  # Unsubscribe a user from a list
+  #
+  # Options
+  # :delete_member    Delete user form list instead of marking them as unsubscribed
+  # :send_goodbye     Send goodbye e-mail to user
+  # :send_notify      Send unsubscribe email to email in list settings
   def unsubscribe(list_id, current_email, options = {})
     options = apply_defaults_to({:delete_member => true}.merge(options))
     # Unsubscribe a list member
