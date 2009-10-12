@@ -5,12 +5,15 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "hominid"
-    s.summary = "Hominid is a Rails GemPlugin for interacting with the Mailchimp API"
+    s.summary = "Hominid is a Rails gem for interacting with the Mailchimp API"
     s.email = "brian@terra-firma-design.com"
     s.homepage = "http://github.com/bgetting/hominid"
-    s.description = "Hominid is a Rails GemPlugin for interacting with the Mailchimp API"
+    s.description = "Hominid is a Rails gem for interacting with the Mailchimp API"
     s.authors = ["Brian Getting"]
   end
+  
+  Jeweler::GemcutterTasks.new
+  
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end

@@ -6,12 +6,11 @@ h2. Installation
 
 Install the gem:
 
-<pre><code>gem sources -a http://gems.github.com
-sudo gem install bgetting-hominid</code></pre>
+<pre><code>sudo gem install hominid</code></pre>
 
 In your @environment.rb@ file:
 
-<pre><code>config.gem "bgetting-hominid", :lib => 'hominid', :source => "http://gems.github.com"</code></pre>
+<pre><code>config.gem "hominid"</code></pre>
 
 You can also install Hominid as a Rails plugin:
 
