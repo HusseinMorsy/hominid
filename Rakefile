@@ -5,10 +5,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "hominid"
-    s.summary = "Hominid is a Rails gem for interacting with the Mailchimp API"
+    s.summary = "Hominid is a Ruby gem for interacting with the Mailchimp API."
     s.email = "brian@terra-firma-design.com"
     s.homepage = "http://github.com/bgetting/hominid"
-    s.description = "Hominid is a Rails gem for interacting with the Mailchimp API"
+    s.description = "Use the hominid gem to easily integrate with the Mailchimp email marketing service API."
     s.authors = ["Brian Getting"]
   end
   
