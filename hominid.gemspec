@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Getting"]
   s.date = %q{2009-10-12}
-  s.description = %q{Hominid is a Rails gem for interacting with the Mailchimp API}
+  s.description = %q{Use the hominid gem to easily integrate with the Mailchimp email marketing service API.}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
     "README.textile"
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "init.rb",
      "install.rb",
      "lib/hominid.rb",
+     "pkg/hominid-1.2.1.gem",
      "rails/init.rb",
      "spec/hominid_spec.rb",
      "spec/spec_helper.rb",
@@ -34,7 +35,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Hominid is a Rails gem for interacting with the Mailchimp API}
+  s.summary = %q{Hominid is a Ruby gem for interacting with the Mailchimp API.}
   s.test_files = [
     "spec/hominid_spec.rb",
      "spec/spec_helper.rb"

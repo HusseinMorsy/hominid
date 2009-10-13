@@ -7,7 +7,7 @@ begin
     s.name = "hominid"
     s.summary = "Hominid is a Ruby gem for interacting with the Mailchimp API."
     s.email = "brian@terra-firma-design.com"
-    s.homepage = "http://github.com/bgetting/hominid"
+    s.homepage = "http://terra-firma-design.com"
     s.description = "Use the hominid gem to easily integrate with the Mailchimp email marketing service API."
     s.authors = ["Brian Getting"]
   end
