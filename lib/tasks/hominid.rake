@@ -5,7 +5,8 @@ namespace :hominid do
   desc "Generate a Hominid config file"
   task :config => :environment do |t|
     if defined?(Rails.root)
-      File.copy("hominid.yml.tpl", "#{Rails.root}/config/hominid.yml")
+      ## TODO: copy config template to Rails project
+      # File.copy("hominid.yml.tpl", "#{Rails.root}/config/hominid.yml")
     end
   end
 end
