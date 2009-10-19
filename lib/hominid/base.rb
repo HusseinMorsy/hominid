@@ -39,6 +39,26 @@ module Hominid
     
     def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
       # Create a new campaign
+      # The options hash should be structured as follows:
+      #
+      #   :list_id        = (string)  The ID of the list to send this campaign to.
+      #   :subject        = (string)  The subject of the campaign.
+      #   :from_email     = (string)  The email address this campaign will come from.
+      #   :from_name      = (string)  The name that this campaign will come from.
+      #   :to_email       = (string)  The To: name recipients will see.
+      #   :template_id    = (integer) The ID of the template to use for this campaign (optional).
+      #   :folder_id      = (integer) The ID of the folder to file this campaign in (optional).
+      #   :tracking       = (array)   What to track for this campaign (optional).
+      #   :title          = (string)  Internal title for this campaign (optional).
+      #   :authenticate   = (boolean) Set to true to authenticate campaign (optional).
+      #   :analytics      = (array)   Google analytics tags (optional).
+      #   :auto_footer    = (boolean) Auto-generate the footer (optional)?
+      #   :inline_css     = (boolean) Inline the CSS styles (optional)?
+      #   :generate_text  = (boolean) Auto-generate text from HTML email (optional)? 
+      #
+      # Visit http://www.mailchimp.com/api/1.2/campaigncreate.func.php for more information about creating
+      # campaigns via the API.
+      #
       call("campaignCreate", type, options, content, segment_options, type_opts)
     end
 

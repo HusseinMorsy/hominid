@@ -13,6 +13,8 @@ module Hominid
       @campaign_id = options.delete(:id)
       super(options)
     end
+    
+    ## TODO: Create finder methods for campaigns like the lists
 
     def campaign_stats()
       # Get the stats of a campaign

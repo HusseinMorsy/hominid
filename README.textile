@@ -69,19 +69,25 @@ You can also updated other attributes by including the MERGE_VARS that you want 
 
 h3. Working with Campaigns
 
-Probably need something about Hominid::Campaign here as an introduction. See *Hominid::Campaign* for more information.
+The *Hominid::Base* class provides methods for retrieving the campaigns for a particular Mailchimp account, as well as creating new campaigns. The *Hominid::Campaign* class provides methods for working with a particular campaign.
 
 h4. Finding a Campaign
 
-Retrieve all campaigns. Get campaigns for a particular list.
+You can find all the campaigns for your Mailchimp account, or for a particular list:
+
+<pre><code>campaigns = Hominid::Base.new.campaigns</code></pre>
+
+<pre><code>list_campaigns = Hominid::Base.new.campaigns({:list_id => 'list_id'})</code></pre>
 
 h4. Creating a Campaign
 
-Create a new campaign.
+You can create new campaigns using Hominid as well. Please refer to the documentation in *Hominid::Base* for more information about the options available when creating a new campaign.
+
+<pre><code>new_campaign = Hominid::Base.new.create_campaign('regular', options, content, segment_opts, type_opts)</code></pre>
 
 h4. Schedule a Campaign
 
-Schedule a campaign
+Information on how to schedule a campaign
 
 h2. Syncing Your Application
 
