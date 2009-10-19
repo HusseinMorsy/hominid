@@ -1,4 +1,4 @@
-p{color:red;padding:1em;border:1px solid red;background:#fafafa;}. We are currently revamping the Hominid gem for a version 2.0.0 release. The documentation is being updated, but the new gem is not quite available yet. Sorry if this causes problems.
+p(meta). We are currently revamping the Hominid gem for a version 2.0.0 release. The documentation is being updated, but the new gem is not quite available yet. Sorry if this causes problems.
 
 h1. Hominid
 
