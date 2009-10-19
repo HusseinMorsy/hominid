@@ -95,7 +95,7 @@ Something here about how to sync a Rails application using the Mailchimp web hoo
 
 h2. Contributors
 
-Hominid is maintained by "Brian Getting":http://terra-firma-design.com and "Michael Struder":http://github.com/mikezter, but wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
+Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very special thank-you to "Michael Struder":http://github.com/mikezter for all of his hard work. Also, Hominid wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
 
 * "Alan Harper":http://github.com/aussiegeek
 * "Will":http://github.com/willinfront
