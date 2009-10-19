@@ -33,21 +33,39 @@ h3. Working with Lists
 
 Probably need something about Hominid::List here as an introduction. See *Hominid::List* for more information.
 
-h4. Finding a List
+h4. List Finder Methods
 
-Find a particular list.
+Start by determining which list you want to work with at Mailchimp. Hominid now includes a series of finder methods to help you find the list that you are looking for. Now you can easily find all of the lists associated with your account, as well as find a single list using @name@, @web_id@ and @list_id@
+
+<pre><code>lists = Hominid::List.all</code></pre>
+
+<pre><code>list = Hominid::List.find_by_name("List Name")</code></pre>
+
+<pre><code>list = Hominid::List.find(id_or_web_id)</code></pre>
 
 h4. Subscribing
 
-Add a member or members to a list.
+To subscribe a person or persons to a Mailchimp list:
+
+<pre><code>list.subscribe("sample@emailaddress.com", 'html')</code></pre>
+
+<pre><code>list.subscribe_many([{:EMAIL => 'sample@emailaddress.com', :EMAIL_TYPE => 'html'}, {:EMAIL => 'another@emailaddress.com', :EMAIL_TYPE => 'html'}])</code></pre>
 
 h4. Unsubscribing
 
-Remove a member or members from a list.
+To unsubscribe a person or persons from a Mailchimp list:
+
+<pre><code>list.unsubscribe("sample@emailaddress.com", 'html')</code></pre>
+
+<pre><code>list.unsubscribe_many(['sample@emailaddress.com', 'another@emailaddress.com'])</code></pre>
 
 h4. Updating
 
-Update a member of a list.
+In the following example, we will be changing a person's email address on the Mailchimp list from @sample@ to @another@:
+
+<pre><code>list.update_member('sample@emailaddress.com', {:EMAIL => 'another@emailaddress.com'}, 'html')</code></pre>
+
+You can also updated other attributes by including the MERGE_VARS that you want to change, such as @EMAIL@, @FNAME@, @LNAME@ and @INTERESTS@. Get a list of merge tags for a particular list by running @list.merge_tags@.
 
 h3. Working with Campaigns
 
@@ -65,6 +83,10 @@ h4. Schedule a Campaign
 
 Schedule a campaign
 
+h2. Syncing Your Application
+
+Something here about how to sync a Rails application using the Mailchimp web hooks.
+
 h2. Contributors
 
 Hominid is maintained by "Brian Getting":http://terra-firma-design.com and "Michael Struder":http://github.com/mikezter, but wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
@@ -80,7 +102,7 @@ Hominid is maintained by "Brian Getting":http://terra-firma-design.com and "Mich
 * "Kelly Mahan":http://digimedia.com/
 * "C.G. Brown":http://www.projectlocker.com/
 
-h3. Note on Patches/Pull Requests
+h2. Note on Patches/Pull Requests
  
 # Fork the project.
 # Make your feature addition or bug fix.
