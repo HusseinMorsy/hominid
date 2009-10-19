@@ -1,4 +1,5 @@
 # Get your API key at http://admin.mailchimp.com/account/api/
+
 development:
   username:
   password: 

@@ -1,76 +1,93 @@
+p(color:red;padding:1em;border:1px solid red;background:#fafafa;). We are currently revamping the Hominid gem for a version 2.0.0 release. The documentation is being updated, but the new gem is not quite available yet. Sorry if this causes problems.
+
 h1. Hominid
 
-Hominid is a Ruby gem for interacting with the "Mailchimp API":http://www.mailchimp.com/api/1.2/.
+Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API ("version 1.2":http://www.mailchimp.com/api/1.2/)
 
 h2. Installation
 
-Install the gem:
-
 <pre><code>sudo gem install hominid</code></pre>
 
-In your @environment.rb@ file:
+Hominid is hosted at "Gemcutter":http://gemcutter.org". Be sure that you have the Gemcutter gem installed if you are having trouble installing Hominid:
 
-<pre><code>config.gem "hominid"</code></pre>
+<pre><code>sudo gem install gemcutter
+gem tumble</code></pre>
 
-You can also install Hominid as a Rails plugin:
+h2. Configuration
 
-<pre><code>script/plugin install git://github.com/bgetting/hominid.git</code></pre>
+You will need to create a "Mailchimp":http://www.mailchimp.com account and get your API key (available at http://admin.mailchimp.com/account/api/) in order to get started.
 
-h2. Setup
+If you are using Hominid inside a Rails application, you can create a config file at @/config/hominid.yml@ with your Mailchimp account information and basic configuration options. Simply run @rake hominid:config@ from within your rails application to generate a config file.
 
-Hominid expects to find a config file at @/config/hominid.yml@ in a Rails application, but you can also pass a hash of config options when creating a new Hominid object (thanks to "ron":http://github.com/ron).
-
-You will also need to create a Mailchimp account to get your API key (available at "http://admin.mailchimp.com/account/api/":http://admin.mailchimp.com/account/api/) to configure a Hominid object. 
-
-h2. Example
+h2. Usage
 
 To interact with the Mailchimp API, simply create a new Hominid object:
 
 <pre><code>@hominid = Hominid.new</code></pre>
 
-_or_
+_or pass the configuration options directly_
 
 <pre><code>@hominid = Hominid.new({:username => 'USERNAME', :password => 'PASSWORD', :api_key => 'API_KEY', :send_goodbye => false, :send_notify => false, :double_opt => false})</code></pre>
 
-You will need to have the @list ID@ of the mailing list you want to work with. You can find the @list ID@ of a list by:
+h3. Working with Lists
 
-<pre><code>
-def find_list_id(list_name)
-  mailing_lists = @hominid.lists
-  unless mailing_lists.nil?
-    @list_id = mailing_lists.find {|list| list["name"] == list_name}["id"]
-  end
-end
-</code></pre>
+Probably need something about Hominid::List here as an introduction. See *Hominid::List* for more information.
 
-To subscribe:
+h4. Finding a List
 
-<pre><code>@hominid.subscribe(@list_id, "email@example.com", :user_info => {:FNAME => 'Bob', :LNAME => 'Smith'}, :email_type => 'html')</code></pre>
+Find a particular list.
 
-To unsubscribe:
+h4. Subscribing
 
-<pre><code>@hominid.unsubscribe(@list_id, "email@example.com")</code></pre>
+Add a member or members to a list.
 
-To update a member:
+h4. Unsubscribing
 
-<pre><code>@hominid.subscribe(@list_id, "email@example.com", :user_info => {:FNAME => 'Robert', :EMAIL => 'another@example.com'}, :email_type => 'html', :update_existing => true)</code></pre>
+Remove a member or members from a list.
 
-_or_
+h4. Updating
 
-<pre><code>@hominid.update_member(@list_id, "email@example.com", {:FNAME => 'Robert', :EMAIL => 'another@example.com'})</code></pre>
+Update a member of a list.
 
-Campaign methods are also supported. You can get all the campaigns for a particular list by:
+h3. Working with Campaigns
 
-<pre><code>@hominid.campaigns(@list_id)</code></pre>
+Probably need something about Hominid::Campaign here as an introduction. See *Hominid::Campaign* for more information.
 
-Leave the @@list_id@ out and it will return all the campaigns for your Mailchimp account.
+h4. Finding a Campaign
 
-h2. Other Stuff
+Retrieve all campaigns. Get campaigns for a particular list.
 
-For the most part, this whole thing was an attempt to optimize the acts_as_mailchimp plugin, and incorporates all the great work from "C.G. Brown":http://www.projectlocker.com/ and "Kelly Mahan":http://digimedia.com/, as well as "Matthew Carlson":http://mandarinsoda.com/, whose plugin inspired nearly all of this work. Recently, "ron":http://github.com/ron and "netguru":http://github.com/netguru have also provided useful changes as well.
+h4. Creating a Campaign
 
-I encourage anyone using this gem to please fork it, improve it, and send me a pull request. I typically only use this gem in a minimal capacity, primarily for just managing whether or not a user is signed up for a mailing list. I do not intend to continue maintaining the "Acts As Mailchimp":http://github.com/bgetting/acts_as_mailchimp in the future, since I personally prefer to just use the Hominid gem.
+Create a new campaign.
 
-So please, help us to improve this gem!
+h4. Schedule a Campaign
 
-Copyright (c) 2009 Brian Getting, released under the MIT license.
+Schedule a campaign
+
+h2. Contributors
+
+Hominid is maintained by "Brian Getting":http://terra-firma-design.com and "Michael Struder":http://github.com/mikezter, but wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
+
+* "Alan Harper":http://github.com/aussiegeek
+* "Will":http://github.com/willinfront
+* "Ben Woosley":http://github.com/Empact
+* "banker":http://github.com/banker
+* "Kristoffer Renholm":http://github.com/renholm
+* "Wiktor Schmidt":http://github.com/netguru
+* "ron":http://github.com/ron
+* "Matthew Carlson":http://mandarinsoda.com/
+* "Kelly Mahan":http://digimedia.com/
+* "C.G. Brown":http://www.projectlocker.com/
+
+h3. Note on Patches/Pull Requests
+ 
+# Fork the project.
+# Make your feature addition or bug fix.
+# Add tests for it. This is important so I don't break it in a future version unintentionally.
+# Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+# Send me a pull request. Bonus points for topic branches.
+
+h2. Copyright
+
+Copyright (c) 2009 Brian Getting. See LICENSE for details.

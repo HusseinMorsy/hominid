@@ -5,17 +5,22 @@ module Hominid
     MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
 
     def initialize(config = {})
-      if defined?(RAILS_ROOT) && (!config || config.empty?)
-        config = YAML.load(File.open("#{RAILS_ROOT}/config/hominid.yml"))[RAILS_ENV].symbolize_keys
+      if defined?(Rails.root) && (!config || config.empty?)
+        config = YAML.load(File.open("#{Rails.root}/config/hominid.yml"))[Rails.env].symbolize_keys
       end
       config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
-      defaults = {:send_welcome => false, :double_opt_in => false, :update_existing => true, :replace_interests => true, :merge_tags => {}}
+      defaults = {:send_welcome       => false,
+                  :double_opt_in      => false,
+                  :update_existing    => true,
+                  :replace_interests  => true,
+                  :merge_tags         => {}}
       @config = defaults.merge(config).freeze
       @chimpApi = XMLRPC::Client.new2(MAILCHIMP_API)
     end
-
-    ## Security related methods
-
+    
+    # Security related methods
+    # --------------------------------
+    
     def add_api_key
       @chimpApi.call("apikeyAdd", *@config.values_at(:username, :password, :api_key))
     end
@@ -28,75 +33,78 @@ module Hominid
       username, password = *@config.values_at(:username, :password)
       @chimpApi.call("apikeys", username, password, include_expired)
     end
-
-    ## Campaign related methods
-
-    # Create a new campaign
+    
+    # Campaign related methods
+    # --------------------------------
+    
     def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
+      # Create a new campaign
       call("campaignCreate", type, options, content, segment_options, type_opts)
     end
 
-    # Get the campaigns for this account
-    # API Version 1.2 requires that filters be sent as a hash
-    # Available options for the filters hash are:
-    #
-    #   :campaign_id    = (string)  The ID of the campaign you wish to return.
-    #   :list_id        = (string)  Show only campaigns with this list_id.
-    #   :folder_id      = (integer) Show only campaigns from this folder.
-    #   :from_name      = (string)  Show only campaigns with this from_name.
-    #   :from_email     = (string)  Show only campaigns with this from_email.
-    #   :title          = (string)  Show only campaigns with this title.
-    #   :subject        = (string)  Show only campaigns with this subject.
-    #   :sedtime_start  = (string)  Show campaigns sent after YYYY-MM-DD HH:mm:ss.
-    #   :sendtime_end   = (string)  Show campaigns sent before YYYY-MM-DD HH:mm:ss.
-    #   :subject        = (boolean) Filter by exact values, or search within content for filter values.
     def campaigns(filters = {}, start = 0, limit = 50)
+      # Get the campaigns for this account
+      # API Version 1.2 requires that filters be sent as a hash
+      # Available options for the filters hash are:
+      #
+      #   :campaign_id    = (string)  The ID of the campaign you wish to return.
+      #   :list_id        = (string)  Show only campaigns with this list_id.
+      #   :folder_id      = (integer) Show only campaigns from this folder.
+      #   :from_name      = (string)  Show only campaigns with this from_name.
+      #   :from_email     = (string)  Show only campaigns with this from_email.
+      #   :title          = (string)  Show only campaigns with this title.
+      #   :subject        = (string)  Show only campaigns with this subject.
+      #   :sedtime_start  = (string)  Show campaigns sent after YYYY-MM-DD HH:mm:ss.
+      #   :sendtime_end   = (string)  Show campaigns sent before YYYY-MM-DD HH:mm:ss.
+      #   :subject        = (boolean) Filter by exact values, or search within content for filter values.
       call("campaigns", filters, start, limit)
     end
 
-    # Attach Ecommerce Order Information to a Campaign.
-    # The order hash should be structured as follows:
-    #
-    #   :id             = (string)  the order id
-    #   :campaign_id    = (string)  the campaign id to track the order (mc_cid query string).
-    #   :email_id       = (string)  email id of the subscriber (mc_eid query string)
-    #   :total          = (double)  Show only campaigns with this from_name.
-    #   :shipping       = (string)  *optional - the total paid for shipping fees.
-    #   :tax            = (string)  *optional - the total tax paid.
-    #   :store_id       = (string)  a unique id for the store sending the order in
-    #   :store_name     = (string)  *optional - A readable name for the store, typicaly the hostname.
-    #   :plugin_id      = (string)  the MailChimp-assigned Plugin Id. Using 1214 for the moment.
-    #   :items          = (array)   the individual line items for an order, using the following keys:
-    #
-    #     :line_num      = (integer) *optional - line number of the item on the order
-    #     :product_id    = (integer) internal product id
-    #     :product_name  = (string)  the name for the product_id associated with the item
-    #     :category_id   = (integer) internal id for the (main) category associated with product
-    #     :category_name = (string)  the category name for the category id
-    #     :qty           = (double)  the quantity of items ordered
-    #     :cost          = (double)  the cost of a single item (i.e., not the extended cost of the line)
     def campaign_ecomm_add_order(order)
+      # Attach Ecommerce Order Information to a Campaign.
+      # The order hash should be structured as follows:
+      #
+      #   :id             = (string)  the order id
+      #   :campaign_id    = (string)  the campaign id to track the order (mc_cid query string).
+      #   :email_id       = (string)  email id of the subscriber (mc_eid query string)
+      #   :total          = (double)  Show only campaigns with this from_name.
+      #   :shipping       = (string)  *optional - the total paid for shipping fees.
+      #   :tax            = (string)  *optional - the total tax paid.
+      #   :store_id       = (string)  a unique id for the store sending the order in
+      #   :store_name     = (string)  *optional - A readable name for the store, typicaly the hostname.
+      #   :plugin_id      = (string)  the MailChimp-assigned Plugin Id. Using 1214 for the moment.
+      #   :items          = (array)   the individual line items for an order, using the following keys:
+      #
+      #     :line_num      = (integer) *optional - line number of the item on the order
+      #     :product_id    = (integer) internal product id
+      #     :product_name  = (string)  the name for the product_id associated with the item
+      #     :category_id   = (integer) internal id for the (main) category associated with product
+      #     :category_name = (string)  the category name for the category id
+      #     :qty           = (double)  the quantity of items ordered
+      #     :cost          = (double)  the cost of a single item (i.e., not the extended cost of the line)
       call("campaignEcommAddOrder", order)
     end
-
-    # Get the templates
+    
     def templates
+      # Get the templates
       call("campaignTemplates")
     end
-
-
-
-    ## Helper methods
-
-    # Convert HTML content to text
+    
+    # Helper methods
+    # --------------------------------
+    
     def html_to_text(content)
+      # Convert HTML content to text
       call("generateText", 'html', content)
     end
 
-    # Convert CSS styles to inline styles and (optionally) remove original styles
     def convert_css_to_inline(html, strip_css = false)
+      # Convert CSS styles to inline styles and (optionally) remove original styles
       call("inlineCss", html, strip_css)
     end
+    
+    # Used internally by Hominid
+    # --------------------------------
 
     def apply_defaults_to(options)
       @config.merge(options)
@@ -123,4 +131,6 @@ module Hominid
     end
   end
 end
-
+    
+    
+    

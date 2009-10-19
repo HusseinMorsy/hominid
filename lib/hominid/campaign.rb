@@ -1,12 +1,16 @@
 module Hominid
+  
   class Campaign < Base
+    
+    # Campaign related methods
+    # --------------------------------
 
     attr_reader :campaign_id
+    
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
       raise HominidError.new('Please provide a Campaign ID.') unless options[:id]
-
-      @campaign_id = options.delte(:id)
+      @campaign_id = options.delete(:id)
       super(options)
     end
 
