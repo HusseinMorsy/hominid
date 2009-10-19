@@ -2,20 +2,20 @@ p(meta). We are currently revamping the Hominid gem for a version 2.0.0 release.
 
 h1. Hominid
 
-Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API ("version 1.2":http://www.mailchimp.com/api/1.2/)
+Hominid is a Ruby gem that provides a wrapper for interacting with the "Mailchimp":http://www.mailchimp.com email marketing service API ("version 1.2":http://www.mailchimp.com/api/1.2/)
 
 h2. Installation
 
 <pre><code>sudo gem install hominid</code></pre>
 
-Hominid is hosted at "Gemcutter":http://gemcutter.org". Be sure that you have the Gemcutter gem installed if you are having trouble installing Hominid:
+Hominid is hosted at "Gemcutter":http://gemcutter.org. Be sure that you have the Gemcutter gem installed if you are having trouble installing Hominid:
 
 <pre><code>sudo gem install gemcutter
 gem tumble</code></pre>
 
 h2. Configuration
 
-You will need to create a "Mailchimp":http://www.mailchimp.com account and get your API key (available at http://admin.mailchimp.com/account/api/) in order to get started.
+You will need to create a "Mailchimp":http://www.mailchimp.com/signup account and get your API key (available at http://admin.mailchimp.com/account/api/) in order to get started.
 
 If you are using Hominid inside a Rails application, you can create a config file at @/config/hominid.yml@ with your Mailchimp account information and basic configuration options. Simply run @rake hominid:config@ from within your rails application to generate a config file.
 
