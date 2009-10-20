@@ -57,7 +57,7 @@ h4. Subscribing
 
 To subscribe a person or persons to a Mailchimp list:
 
-<pre><code>list.subscribe("sample@emailaddress.com", 'html')</code></pre>
+<pre><code>list.subscribe("sample@emailaddress.com")</code></pre>
 
 <pre><code>list.subscribe_many([{:EMAIL => 'sample@emailaddress.com', :EMAIL_TYPE => 'html'}, {:EMAIL => 'another@emailaddress.com', :EMAIL_TYPE => 'html'}])</code></pre>
 
