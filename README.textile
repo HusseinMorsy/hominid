@@ -15,17 +15,29 @@ h2. Configuration
 
 You will need to create a "Mailchimp":http://www.mailchimp.com/signup account and get your API key (available at http://admin.mailchimp.com/account/api/) in order to get started.
 
-If you are using Hominid inside a Rails application, you can create a config file at @/config/hominid.yml@ with your Mailchimp account information and basic configuration options. Simply run @rake hominid:config@ from within your rails application to generate a config file.
+If you are using Hominid inside a Rails application, you can create a config file at @/config/hominid.yml@ with your Mailchimp account information and basic configuration options:
+
+<pre><code>development:
+ username: USERNAME
+ password: PASSWORD
+ api_key: API KEY
+ send_goodbye: false
+ send_notify: false
+ double_opt: false
+
+...</code></pre>
+
+TODO: Run @rake hominid:config@ from within a Rails app to create a config file.
 
 h2. Usage
 
 To interact with the Mailchimp API, simply create a new Hominid object:
 
-<pre><code>@hominid = Hominid.new</code></pre>
+<pre><code>@hominid = Hominid::Base.new</code></pre>
 
 _or pass the configuration options directly_
 
-<pre><code>@hominid = Hominid.new({:username => 'USERNAME', :password => 'PASSWORD', :api_key => 'API_KEY', :send_goodbye => false, :send_notify => false, :double_opt => false})</code></pre>
+<pre><code>@hominid = Hominid::Base.new({:username => 'USERNAME', :password => 'PASSWORD', :api_key => 'API_KEY', :send_goodbye => false, :send_notify => false, :double_opt => false})</code></pre>
 
 h3. Working with Lists
 

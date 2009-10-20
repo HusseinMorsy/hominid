@@ -28,8 +28,8 @@ Gem::Specification.new do |s|
      "lib/hominid/base.rb",
      "lib/hominid/campaign.rb",
      "lib/hominid/list.rb",
-     "lib/tasks/hominid.rake",
      "pkg/hominid-2.0.0.gem",
+     "tasks/rails/hominid.rake",
      "test/hominid_test.rb",
      "test/test_helper.rb"
   ]
