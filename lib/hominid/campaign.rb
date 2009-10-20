@@ -87,6 +87,7 @@ module Hominid
       # campaigns via the API.
       #
       new(:id => 0).call("campaignCreate", type, options, content, segment_options, type_opts)
+      ## TODO: Return the new campaign with the ID returned from the API
     end
     
     def self.templates
