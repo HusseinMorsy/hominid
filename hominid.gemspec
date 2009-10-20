@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
      "lib/hominid/campaign.rb",
      "lib/hominid/helper.rb",
      "lib/hominid/list.rb",
-     "lib/hominid/security.rb",
      "pkg/hominid-2.0.0.gem",
      "tasks/rails/hominid.rake",
      "test/hominid_test.rb",
