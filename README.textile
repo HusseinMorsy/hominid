@@ -31,7 +31,7 @@ _or pass the configuration options directly_
 
 h3. Working with Lists
 
-Probably need something about Hominid::List here as an introduction. See *Hominid::List* for more information.
+Probably need something about Hominid::List here as an introduction. See _Hominid::List_ for more information.
 
 h4. List Finder Methods
 
@@ -69,7 +69,7 @@ You can also updated other attributes by including the MERGE_VARS that you want 
 
 h3. Working with Campaigns
 
-The *Hominid::Base* class provides methods for retrieving the campaigns for a particular Mailchimp account, as well as creating new campaigns. The *Hominid::Campaign* class provides methods for working with a particular campaign.
+The _Hominid::Base_ class provides methods for retrieving the campaigns for a particular Mailchimp account, as well as creating new campaigns. The _Hominid::Campaign_ class provides methods for working with a particular campaign.
 
 h4. Finding a Campaign
 
@@ -81,17 +81,23 @@ You can find all the campaigns for your Mailchimp account, or for a particular l
 
 h4. Creating a Campaign
 
-You can create new campaigns using Hominid as well. Please refer to the documentation in *Hominid::Base* for more information about the options available when creating a new campaign.
+You can create new campaigns using Hominid as well. Please refer to the documentation in _Hominid::Base_ for more information about the options available when creating a new campaign.
 
 <pre><code>new_campaign = Hominid::Base.new.create_campaign('regular', options, content, segment_opts, type_opts)</code></pre>
 
 h4. Schedule a Campaign
 
-Information on how to schedule a campaign
+As an example of how to work with a particular campaign, use the _Hominid::Campaign_ class. Extending from the previous example, since the _#create_campaign_ method returns the ID of the created campaign, we can use it to instantiate the _Hominid::Campaign_ class and schedule our new campaign to go be delivered 2 days from now:
+
+<pre><code>campaign = Hominid::Campaign.new(new_campaign)</code></pre>
+
+<pre><code>campaign.schedule_campaign(2.days.from_now)</code></pre>
 
 h2. Syncing Your Application
 
-Something here about how to sync a Rails application using the Mailchimp web hooks.
+If you are integrating an application with Mailchimp, Hominid will provide a way for your app to connect with your Mailchimp account. However, it does not provide a way for Mailchimp to connect to your application, which is why Mailchimp has implemented "web hooks":http://www.mailchimp.com/api/webhooks/.
+
+More on that to come here...
 
 h2. Contributors
 
