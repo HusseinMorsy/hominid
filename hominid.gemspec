@@ -22,12 +22,14 @@ Gem::Specification.new do |s|
      "README.textile",
      "Rakefile",
      "VERSION",
+     "hominid.gemspec",
      "hominid.yml.tpl",
      "lib/hominid.rb",
      "lib/hominid/base.rb",
      "lib/hominid/campaign.rb",
      "lib/hominid/list.rb",
      "lib/tasks/hominid.rake",
+     "pkg/hominid-2.0.0.gem",
      "test/hominid_test.rb",
      "test/test_helper.rb"
   ]
@@ -46,11 +48,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_development_dependency(%q<shoulda>, [">= 0"])
     else
-      s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_dependency(%q<shoulda>, [">= 0"])
     end
   else
-    s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+    s.add_dependency(%q<shoulda>, [">= 0"])
   end
 end

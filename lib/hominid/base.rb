@@ -2,12 +2,14 @@ module Hominid
   class Base
 
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
-    MAILCHIMP_API = "http://api.mailchimp.com/1.2/"
+    ## TODO: Auto-switch API url based on API key
+    MAILCHIMP_API_VERSION = "1.2"
 
     def initialize(config = {})
       if defined?(Rails.root) && (!config || config.empty?)
         config = YAML.load(File.open("#{Rails.root}/config/hominid.yml"))[Rails.env].symbolize_keys
       end
+      api_endpoint = config[:api_key].split('-').last
       config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
       defaults = {:send_welcome       => false,
                   :double_opt_in      => false,
@@ -15,7 +17,7 @@ module Hominid
                   :replace_interests  => true,
                   :merge_tags         => {}}
       @config = defaults.merge(config).freeze
-      @chimpApi = XMLRPC::Client.new2(MAILCHIMP_API)
+      @chimpApi = XMLRPC::Client.new2("http://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
     end
     
     # Security related methods
