@@ -129,7 +129,7 @@ module Hominid
       call("listBatchUnsubscribe", @list_id, emails, *options.values_at(:delete_member, :send_goodbye, :send_notify))
     end
 
-    def update_member(current_email, merge_tags = {}, email_type = "")
+    def update_member(current_email, merge_tags = {}, email_type = "html")
       # Update a member of this list
       call("listUpdateMember", @list_id, current_email, merge_tags, email_type, true)
     end

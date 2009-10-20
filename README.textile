@@ -41,7 +41,7 @@ _or pass the configuration options directly_
 
 h3. Working with Lists
 
-Probably need something about Hominid::List here as an introduction. See _Hominid::List_ for more information.
+The _Hominid::List_ class is available for working finding lists and working with particular lists. See _Hominid::List_ for more information.
 
 h4. List Finder Methods
 
