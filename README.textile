@@ -31,13 +31,7 @@ TODO: Run @rake hominid:config@ from within a Rails app to create a config file.
 
 h2. Usage
 
-To interact with the Mailchimp API, simply create a new Hominid object:
-
-<pre><code>@hominid = Hominid::Base.new</code></pre>
-
-_or pass the configuration options directly_
-
-<pre><code>@hominid = Hominid::Base.new({:username => 'USERNAME', :password => 'PASSWORD', :api_key => 'API_KEY', :send_goodbye => false, :send_notify => false, :double_opt => false})</code></pre>
+Not all API methods are supported (yet). Currently there are classes for managing lists and campaigns.
 
 h3. Working with Lists
 
@@ -45,7 +39,7 @@ The _Hominid::List_ class is available for working finding lists and working wit
 
 h4. List Finder Methods
 
-Start by determining which list you want to work with at Mailchimp. Hominid now includes a series of finder methods to help you find the list that you are looking for. Now you can easily find all of the lists associated with your account, as well as find a single list using @name@, @web_id@ and @list_id@
+There are finder methods for working with lists. Refer to _Hominid::List_ to see the other finders availables.
 
 <pre><code>lists = Hominid::List.all</code></pre>
 
@@ -79,21 +73,21 @@ You can also updated other attributes by including the MERGE_VARS that you want 
 
 h3. Working with Campaigns
 
-The _Hominid::Base_ class provides methods for retrieving the campaigns for a particular Mailchimp account, as well as creating new campaigns. The _Hominid::Campaign_ class provides methods for working with a particular campaign.
+The _Hominid::Campaign_ class provides methods for working with a campaigns.
 
-h4. Finding a Campaign
+h4. Campaign Finder Methods
 
-You can find all the campaigns for your Mailchimp account, or for a particular list:
+There are finder methods for campaigns as well. Refer to _Hominid::Campaign_ to see the other finders available.
 
-<pre><code>campaigns = Hominid::Base.new.campaigns</code></pre>
+<pre><code>campaigns = Hominid::Campaign.all</code></pre>
 
-<pre><code>list_campaigns = Hominid::Base.new.campaigns({:list_id => 'list_id'})</code></pre>
+<pre><code>campaigns = Hominid::Campaign.find_by_list_name("List Name")</code></pre>
 
 h4. Creating a Campaign
 
 You can create new campaigns using Hominid as well. Please refer to the documentation in _Hominid::Base_ for more information about the options available when creating a new campaign.
 
-<pre><code>new_campaign = Hominid::Base.new.create_campaign('regular', options, content, segment_opts, type_opts)</code></pre>
+<pre><code>new_campaign = Hominid::Campaign.create('regular', options, content, segment_opts, type_opts)</code></pre>
 
 h4. Schedule a Campaign
 
@@ -102,6 +96,12 @@ As an example of how to work with a particular campaign, use the _Hominid::Campa
 <pre><code>campaign = Hominid::Campaign.new(new_campaign)</code></pre>
 
 <pre><code>campaign.schedule_campaign(2.days.from_now)</code></pre>
+
+h3. Helper Methods
+
+The _Hominid::Helper_ class provides a way to access the helper methods for the Mailchimp API. For example, to create a new folder for filing campaigns:
+
+<pre><code>folder = Hominid::Helper.create_folder("Folder Name")</code></pre>
 
 h2. Syncing Your Application
 

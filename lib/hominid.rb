@@ -4,7 +4,7 @@ module Hominid
  
   class HominidError < StandardError
     def initialize(error)
-      super("<#{error.faultCode}> #{error.message}")
+      super("#{error.message}")
     end
   end
  
