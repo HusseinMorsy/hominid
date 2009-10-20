@@ -65,7 +65,7 @@ h4. Unsubscribing
 
 To unsubscribe a person or persons from a Mailchimp list:
 
-<pre><code>list.unsubscribe("sample@emailaddress.com", 'html')</code></pre>
+<pre><code>list.unsubscribe("sample@emailaddress.com")</code></pre>
 
 <pre><code>list.unsubscribe_many(['sample@emailaddress.com', 'another@emailaddress.com'])</code></pre>
 
