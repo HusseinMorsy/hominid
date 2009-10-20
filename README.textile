@@ -31,7 +31,7 @@ TODO: Run @rake hominid:config@ from within a Rails app to create a config file.
 
 h2. Usage
 
-Not all API methods are supported (yet). Currently there are classes for managing lists and campaigns.
+Not all API methods are supported (yet). Currently there are classes for working with lists (_Hominid::List_), campaigns (_Hominid::Campaign_) and accessing the helper methods (_Hominid::Helper_).
 
 h3. Working with Lists
 
