@@ -1,5 +1,3 @@
-p(meta). We are currently revamping the Hominid gem for a version 2.0.0 release. The documentation is being updated, but the new gem is not quite available yet. Sorry if this causes problems.
-
 h1. Hominid
 
 Hominid is a Ruby gem that provides a wrapper for interacting with the "Mailchimp":http://www.mailchimp.com email marketing service API ("version 1.2":http://www.mailchimp.com/api/1.2/)
