@@ -111,7 +111,7 @@ More on that to come here...
 
 h2. Contributors
 
-Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very special thank-you to "Michael Struder":http://github.com/mikezter for all of his hard work. Also, Hominid wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
+Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very special thank-you to "Michael Strüder":http://github.com/mikezter for all of his hard work. Also, Hominid wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
 
 * "Alan Harper":http://github.com/aussiegeek
 * "Will":http://github.com/willinfront
@@ -125,7 +125,7 @@ Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very s
 * "C.G. Brown":http://www.projectlocker.com/
 
 h2. Note on Patches/Pull Requests
- 
+
 # Fork the project.
 # Make your feature addition or bug fix.
 # Add tests for it. This is important so I don't break it in a future version unintentionally.
@@ -135,3 +135,4 @@ h2. Note on Patches/Pull Requests
 h2. Copyright
 
 Copyright (c) 2009 Brian Getting. See LICENSE for details.
+
