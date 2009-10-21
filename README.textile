@@ -27,7 +27,8 @@ If you are using Hominid inside a Rails application, you can create a config fil
 
 ...</code></pre>
 
-TODO: Run @rake hominid:config@ from within a Rails app to create a config file.
+Run @rake hominid:config@ from within a Rails app to create an empty config file.
+Note: You will need to <pre><code>require 'hominid'</code></pre> in your @Rakefile@ to make this rake task available to your application.
 
 h2. Usage
 
