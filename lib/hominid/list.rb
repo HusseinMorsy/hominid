@@ -1,13 +1,13 @@
 module Hominid
 
   class List < Base
-    
+
     # List related methods
     # --------------------------------
 
     attr_reader :list_id
     attr_reader :attributes
-    
+
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
       raise HominidError.new('Please provide a List ID.') unless options[:id]
@@ -115,7 +115,7 @@ module Hominid
       options = apply_defaults_to({:update_existing => true}.merge(options))
       call("listBatchSubscribe", @list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
     end
-    
+
     def unsubscribe(current_email, options = {})
       # Unsubscribe a list member
       options = apply_defaults_to({:delete_member => true}.merge(options))
@@ -136,3 +136,4 @@ module Hominid
 
   end
 end
+

@@ -4,7 +4,7 @@ module Hominid
 
   class HominidError < StandardError
     def initialize(error)
-      super("#{error.message}")
+      super("<#{error.faultCode}> #{error.message}")
     end
   end
 
@@ -29,12 +29,11 @@ module Hominid
   class NotSubscribed < HominidListEmailError
   end
 
-  class HominidCommunicationError < HominidError
+  class HominidCommunicationError < StandardError
     def initialize(message)
       super(message)
     end
   end
-
 end
 
 begin
