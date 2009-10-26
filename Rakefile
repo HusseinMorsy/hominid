@@ -9,7 +9,7 @@ begin
     gem.description = %Q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
     gem.email = "brian@terra-firma-design.com"
     gem.homepage = "http://github.com/bgetting/hominid"
-    gem.authors = ["Brian Getting", "Michael Struder"]
+    gem.authors = ["Brian Getting", "Michael Strüder"]
     gem.add_development_dependency "shoulda"
   end
   Jeweler::GemcutterTasks.new
@@ -54,3 +54,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
