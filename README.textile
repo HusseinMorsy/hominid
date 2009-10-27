@@ -94,7 +94,7 @@ h4. Schedule a Campaign
 
 As an example of how to work with a particular campaign, use the _Hominid::Campaign_ class. Extending from the previous example, since the _#create_campaign_ method returns the ID of the created campaign, we can use it to instantiate the _Hominid::Campaign_ class and schedule our new campaign to go be delivered 2 days from now:
 
-<pre><code>campaign = Hominid::Campaign.new(new_campaign)</code></pre>
+<pre><code>campaign = Hominid::Campaign.new(:id => new_campaign)</code></pre>
 
 <pre><code>campaign.schedule_campaign(2.days.from_now)</code></pre>
 

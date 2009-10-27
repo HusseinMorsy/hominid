@@ -1,4 +1,5 @@
 require 'xmlrpc/client'
+require 'ostruct'
 
 module Hominid
 
@@ -38,7 +39,7 @@ module Hominid
 end
 
 begin
-  # inlcude the provided rake task
+  # include the provided rake task
   require 'rake'
   unless Rake::Task.task_defined? "hominid:config"
     load File.join(File.dirname(__FILE__), '..', 'tasks', 'rails', 'hominid.rake')
