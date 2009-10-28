@@ -2,7 +2,6 @@ module Hominid
   class Base
 
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
-    ## TODO: Auto-switch API url based on API key
     MAILCHIMP_API_VERSION = "1.2"
 
     def initialize(config = {})
