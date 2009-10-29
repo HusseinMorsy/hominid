@@ -10,7 +10,7 @@ module Hominid
 
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
-      raise HominidError.new('Please provide a List ID.') unless options[:id]
+      raise StandardError.new('Please provide a List ID.') unless options[:id]
       @list_id = options.delete(:id)
       @attributes = options.delete(:attributes)
       super(options)
@@ -100,13 +100,14 @@ module Hominid
 
     def subscribe(email, options = {})
       # Subscribe a member to this list
+      merge_tags = clean_merge_tags options[:merge_tags]
       options = apply_defaults_to({:email_type => "html"}.merge(options))
       call(
         "listSubscribe",
         @list_id,
         email,
+        merge_tags,
         *options.values_at(
-          :merge_tags,
           :email_type,
           :double_opt_in,
           :update_existing,
@@ -116,9 +117,10 @@ module Hominid
       )
     end
 
+    # Subscribe a batch of members
+    # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
     def subscribe_many(subscribers, options = {})
-      # Subscribe a batch of members
-      # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
+      subscribers = subscribers.collect { |subscriber| clean_merge_tags(subscriber) }
       options = apply_defaults_to({:update_existing => true}.merge(options))
       call("listBatchSubscribe", @list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
     end

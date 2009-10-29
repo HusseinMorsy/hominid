@@ -3,34 +3,37 @@ require 'ostruct'
 
 module Hominid
 
-  class HominidError < StandardError
+  class StandardError < ::StandardError
+  end
+
+  class APIError < StandardError
     def initialize(error)
       super("<#{error.faultCode}> #{error.message}")
     end
   end
 
-  class HominidListError < HominidError
+  class ListError < APIError
   end
 
-  class HominidListEmailError < HominidListError
+  class ListEmailError < ListError
   end
 
-  class HominidListMergeError < HominidListError
+  class ListMergeError < ListError
   end
 
-  class AlreadySubscribed < HominidListEmailError
+  class AlreadySubscribed < ListEmailError
   end
 
-  class AlreadyUnsubscribed < HominidListEmailError
+  class AlreadyUnsubscribed < ListEmailError
   end
 
-  class NotExists < HominidListEmailError
+  class NotExists < ListEmailError
   end
 
-  class NotSubscribed < HominidListEmailError
+  class NotSubscribed < ListEmailError
   end
 
-  class HominidCommunicationError < StandardError
+  class CommunicationError < StandardError
     def initialize(message)
       super(message)
     end

@@ -38,6 +38,20 @@ module Hominid
     # Used internally by Hominid
     # --------------------------------
 
+    # handle common cases for which the Mailchimp API would raise Exceptions
+    def clean_merge_tags(merge_tags)
+      return {} unless merge_tags.is_a? Hash
+
+      merge_tags.each do |key, value|
+        if merge_tags[key].is_a? String
+          merge_tags[key] = value.gsub("\v", '')
+        elsif merge_tags[key].nil?
+          merge_tags[key] = ''
+        end
+      end
+
+    end
+
     def apply_defaults_to(options)
       @config.merge(options)
     end
@@ -61,12 +75,12 @@ module Hominid
       if error.message =~ /Wrong type NilClass\. Not allowed!/
         hashes = args.select{|a| a.is_a? Hash}
         errors = hashes.select{|k, v| v.nil? }.collect{ |k, v| "#{k} is Nil." }.join(' ')
-        raise HominidCommunicationError.new(errors)
+        raise CommunicationError.new(errors)
       else
         raise error
       end
     rescue Exception => error
-      raise HominidCommunicationError.new(error.message)
+      raise CommunicationError.new(error.message)
     end
   end
 end
