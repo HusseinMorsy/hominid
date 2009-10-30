@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "README.textile",
      "Rakefile",
      "VERSION",
+     "hominid.gemspec",
      "hominid.yml.tpl",
      "lib/hominid.rb",
      "lib/hominid/base.rb",

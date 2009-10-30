@@ -9,7 +9,21 @@ module Hominid
     #
     # Simple Usage:
     #
-    # h = Hominid::Webhook.new({"type" => "subscribe", ...})
+    # h = Hominid::Webhook.new(params)
+    #
+    # Sample params from Mailchimp webhook:
+    # params => { "type" => "subscribe",
+    #             "fired_at" => "2009-03-26 21:35:57",
+    #             "data" => { "id" => "8a25ff1d98",
+    #                         "list_id" => "8a25ff1d98",
+    #                         "email" => "api@mailchimp.com",
+    #                         "email_type" => "html",
+    #                         "merges" => {"EMAIL" => "api@mailchimp.com",
+    #                                     "FNAME" => "Brian",
+    #                                     "LNAME" => "Getting",
+    #                                     "INTERESTS" => "Group1,Group2"},
+    #                         "ip_opt" => "10.20.10.30",
+    #                         "ip_signup" => "10.20.10.30" }}
     #
     # Returns an object with the following methods (NOTE: Not all methods are available
     # for all event types. Refer to http://www.mailchimp.com/api/webhooks/ for information
@@ -28,7 +42,6 @@ module Hominid
     # h.ip_opt              <= (String)     The opt in IP address.
     # h.ip_signup           <= (String)     The signup IP address.
     #
-    # {"type" => "subscribe", "fired_at" => "2009-03-26 21:35:57", "data" => {"id" => "8a25ff1d98", "list_id" => "8a25ff1d98", "email" => "api@mailchimp.com", "email_type" => "html", "merges" => {"EMAIL" => "api@mailchimp.com", "FNAME" => "Brian", "LNAME" => "Getting", "INTERESTS" => "Group1,Group2"}, "ip_opt" => "10.20.10.30", "ip_signup" => "10.20.10.30"}}
     
     attr_reader :request
     
