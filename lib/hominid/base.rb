@@ -41,7 +41,6 @@ module Hominid
     # handle common cases for which the Mailchimp API would raise Exceptions
     def clean_merge_tags(merge_tags)
       return {} unless merge_tags.is_a? Hash
-
       merge_tags.each do |key, value|
         if merge_tags[key].is_a? String
           merge_tags[key] = value.gsub("\v", '')
@@ -49,7 +48,6 @@ module Hominid
           merge_tags[key] = ''
         end
       end
-
     end
 
     def apply_defaults_to(options)

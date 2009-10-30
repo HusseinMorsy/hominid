@@ -117,9 +117,9 @@ module Hominid
       )
     end
 
-    # Subscribe a batch of members
-    # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
     def subscribe_many(subscribers, options = {})
+      # Subscribe an array of email addresses
+      # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
       subscribers = subscribers.collect { |subscriber| clean_merge_tags(subscriber) }
       options = apply_defaults_to({:update_existing => true}.merge(options))
       call("listBatchSubscribe", @list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
