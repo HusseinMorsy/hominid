@@ -4,7 +4,7 @@ Hominid is a Ruby gem that provides a wrapper for interacting with the "Mailchim
 
 h2. Installation
 
-<pre><code>sudo gem install hominid, :version => '>= 2.0.0', :source => "http://gemcutter.org"</code></pre>
+<pre><code>sudo gem install hominid, :version => '>= 2.0.1', :source => "http://gemcutter.org"</code></pre>
 
 Hominid is hosted at "Gemcutter":http://gemcutter.org. Be sure that you have the Gemcutter gem installed if you are having trouble installing Hominid:
 
