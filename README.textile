@@ -108,7 +108,7 @@ h2. Syncing Your Application
 
 If you are integrating an application with Mailchimp, Hominid will provide a way for your app to connect with your Mailchimp account. However, it does not provide a way for Mailchimp to connect to your application, which is why Mailchimp has implemented "web hooks":http://www.mailchimp.com/api/webhooks/.
 
-The _Hominid::Webhook class helps with receiving <tt>POST</tt> data from a Mailchimp webhook:
+The _Hominid::Webhook_ class helps with receiving <tt>POST</tt> data from a Mailchimp webhook:
 
 <pre><code>hook = Hominid::Webhook.new(params)
 case hook.event
