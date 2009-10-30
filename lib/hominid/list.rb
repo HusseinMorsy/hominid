@@ -1,16 +1,16 @@
 module Hominid
 
   class List < Base
-    
+
     # List related methods
     # --------------------------------
 
     attr_reader :list_id
     attr_reader :attributes
-    
+
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
-      raise HominidError.new('Please provide a List ID.') unless options[:id]
+      raise StandardError.new('Please provide a List ID.') unless options[:id]
       @list_id = options.delete(:id)
       @attributes = options.delete(:attributes)
       super(options)
@@ -47,26 +47,32 @@ module Hominid
       # Add an interest group to a list
       call("listInterestGroupAdd", @list_id, group)
     end
+    alias :interest_group_add :create_group
 
     def create_tag(tag, name, required = false)
       # Add a merge tag to a list
       call("listMergeVarAdd", @list_id, tag, name, required)
     end
+    alias :merge_var_add :create_tag
 
     def delete_group(group)
       # Delete an interest group for a list
       call("listInterestGroupDel", @list_id, group)
     end
+    alias :interest_group_del :delete_group
 
     def delete_tag(tag)
       # Delete a merge tag and all its members
       call("listMergeVarDel", @list_id, tag)
     end
+    alias :merge_var_del :delete_tag
 
     def groups()
       # Get the interest groups for a list
       call("listInterestGroups", @list_id)
     end
+    alias :interest_groups :groups
+
 
     def member_info(email)
       # Get a member of a list
@@ -90,16 +96,18 @@ module Hominid
       # Get the merge tags for a list
       call("listMergeVars", @list_id)
     end
+    alias :merge_vars :merge_tags
 
     def subscribe(email, options = {})
       # Subscribe a member to this list
+      merge_tags = clean_merge_tags options[:merge_tags]
       options = apply_defaults_to({:email_type => "html"}.merge(options))
       call(
         "listSubscribe",
         @list_id,
         email,
+        merge_tags,
         *options.values_at(
-          :merge_tags,
           :email_type,
           :double_opt_in,
           :update_existing,
@@ -109,13 +117,15 @@ module Hominid
       )
     end
 
+    # Subscribe a batch of members
+    # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
     def subscribe_many(subscribers, options = {})
-      # Subscribe a batch of members
-      # subscribers(array) = [{:EMAIL => 'example@email.com', :EMAIL_TYPE => 'html'}]
+      subscribers = subscribers.collect { |subscriber| clean_merge_tags(subscriber) }
       options = apply_defaults_to({:update_existing => true}.merge(options))
       call("listBatchSubscribe", @list_id, subscribers, *options.values_at(:double_opt_in, :update_existing, :replace_interests))
     end
-    
+    alias :batch_subscribe :subscribe_many
+
     def unsubscribe(current_email, options = {})
       # Unsubscribe a list member
       options = apply_defaults_to({:delete_member => true}.merge(options))
@@ -128,6 +138,7 @@ module Hominid
       options = apply_defaults_to({:delete_member => true}.merge(options))
       call("listBatchUnsubscribe", @list_id, emails, *options.values_at(:delete_member, :send_goodbye, :send_notify))
     end
+    alias :batch_unsubscribe :unsubscribe_many
 
     def update_member(current_email, merge_tags = {}, email_type = "html")
       # Update a member of this list
@@ -136,3 +147,4 @@ module Hominid
 
   end
 end
+

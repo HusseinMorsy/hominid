@@ -1,30 +1,30 @@
 module Hominid
-  
+
   class Campaign < Base
-    
+
     # Campaign related methods
     # --------------------------------
 
     attr_reader :campaign_id
     attr_reader :attributes
-    
+
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
-      raise HominidError.new('Please provide a Campaign ID.') unless options[:id]
+      raise StandardError.new('Please provide a Campaign ID.') unless options[:id]
       @campaign_id = options.delete(:id)
       @attributes = options.delete(:attributes)
       super(options)
     end
-    
+
     def self.all
       # Get all campaigns for this mailchimp account
       new(:id => 0).call("campaigns").to_a.collect { |c| Campaign.new(:id => c.delete('id'), :attributes => c) }
     end
-    
+
     def self.find_by_list_name(list_name)
       new(:id => 0).call("campaigns", {:list_id => List.find_by_name(list_name).list_id}).to_a.collect { |c| Campaign.new(:id=> c.delete('id'), :attributes => c) }
     end
-    
+
     def self.find_by_list_id(list_id)
       # Find all campaigns for the given list
       new(:id => 0).call("campaigns", {:list_id => list_id}).to_a.collect { |c| Campaign.new(:id=> c.delete('id'), :attributes => c) }
@@ -34,7 +34,7 @@ module Hominid
       # Find campaign by title
       all.find { |c| c.attributes['title'] =~ /#{title}/ }
     end
-    
+
     def self.find_by_type(type)
       # Find campaign by type. Possible choices are:
       #   'regular'
@@ -63,7 +63,7 @@ module Hominid
       campaign = self.find_by_id(id_or_web_id.to_s).to_a + self.find_by_web_id(id_or_web_id.to_i).to_a
       return campaign.blank? ? nil : campaign.first
     end
-    
+
     def self.create(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
       # Create a new campaign
       # The options hash should be structured as follows:
@@ -81,7 +81,7 @@ module Hominid
       #   :analytics      = (array)   Google analytics tags (optional).
       #   :auto_footer    = (boolean) Auto-generate the footer (optional)?
       #   :inline_css     = (boolean) Inline the CSS styles (optional)?
-      #   :generate_text  = (boolean) Auto-generate text from HTML email (optional)? 
+      #   :generate_text  = (boolean) Auto-generate text from HTML email (optional)?
       #
       # Visit http://www.mailchimp.com/api/1.2/campaigncreate.func.php for more information about creating
       # campaigns via the API.
@@ -89,12 +89,12 @@ module Hominid
       new(:id => 0).call("campaignCreate", type, options, content, segment_options, type_opts)
       ## TODO: Return the new campaign with the ID returned from the API
     end
-    
+
     def self.templates
       # Get the templates for this account
       new(:id => 0).call("campaignTemplates")
     end
-    
+
     def add_order(order)
       # Attach Ecommerce Order Information to a campaign.
       # The order hash should be structured as follows:
@@ -125,9 +125,11 @@ module Hominid
       call("campaignStats", @campaign_id)
     end
 
-    def campaign_content()
+    # Get the HTML & text content for a campaign
+    # :for_archive        = (boolean) default true, true returns the content as it would appear in the archive, false returns the raw HTML/text
+    def campaign_content(for_archive = true)
       # Get the content of a campaign
-      call("campaignContent", @campaign_id)
+      call("campaignContent", @campaign_id, for_archive)
     end
 
     def delete_campaign()
