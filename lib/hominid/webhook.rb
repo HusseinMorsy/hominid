@@ -15,7 +15,8 @@ module Hominid
     # for all event types. Refer to http://www.mailchimp.com/api/webhooks/ for information
     # on what data will be available for each event):
     # 
-    # h.event               <= (String)     The event that fired the request. Ex: subscribe
+    # h.event               <= (String)     The event that fired the request. Possible events are:
+    #                                       "subscribe", "unsubscribe", "profile", "upemail", "cleaned"
     # h.fired_at            <= (Datetime)   When the webhook request was fired.
     # h.id                  <= (String)     The ID of the webhook request.
     # h.list_id             <= (String)     The ID of the list that generated the request.
