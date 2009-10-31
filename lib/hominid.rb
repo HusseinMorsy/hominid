@@ -3,7 +3,7 @@ require 'ostruct'
 
 module Hominid
 
-  class StandardError < StandardError
+  class StandardError < ::StandardError
   end
 
   class APIError < StandardError

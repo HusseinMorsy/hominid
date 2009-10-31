@@ -67,7 +67,7 @@ module Hominid
       when 233, 215
         raise NotSubscribed.new(error)
       else
-        raise HominidError.new(error)
+        raise APIError.new(error)
       end
     rescue RuntimeError => error
       if error.message =~ /Wrong type NilClass\. Not allowed!/
