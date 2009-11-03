@@ -14,9 +14,14 @@ module Hominid
                   :double_opt_in      => false,
                   :update_existing    => true,
                   :replace_interests  => true,
-                  :merge_tags         => {}}
+                  :merge_tags         => {},
+                  :secure             => false}
       @config = defaults.merge(config).freeze
-      @chimpApi = XMLRPC::Client.new2("http://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+      if config[:secure]
+        @chimpApi = XMLRPC::Client.new2("https://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+      else
+        @chimpApi = XMLRPC::Client.new2("http://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+      end
     end
 
     # Security related methods
