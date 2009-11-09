@@ -49,7 +49,7 @@ module Hominid
 
     def self.find_by_web_id(web_id)
       # Find campaigns by web_id
-      all.find { |campaign| campaign.attributes['web_id'] =~ /#{web_id}/ }
+      all.find { |campaign| campaign.attributes['web_id'] == web_id.to_i }
     end
 
     def self.find_by_id(id)
