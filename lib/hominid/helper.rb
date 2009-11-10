@@ -5,22 +5,22 @@ module Hominid
     # Helper methods
     # --------------------------------
     
-    def self.account_details
+    def self.account_details(options = {})
       # Get details for this account.
-      new.call("getAccountDetails")
+      new(options).call("getAccountDetails")
     end
     
-    def self.convert_css_to_inline(html, strip_css = false)
+    def self.convert_css_to_inline(html, strip_css = false, options = {})
       # Convert CSS styles to inline styles and (optionally) remove original styles
       new.call("inlineCss", html, strip_css)
     end
     
-    def self.create_folder(name)
+    def self.create_folder(name, options = {})
       # Create a new folder to file campaigns in
-      new.call("createFolder", name)
+      new(options).call("createFolder", name)
     end
     
-    def self.generate_text(type, content)
+    def self.generate_text(type, content, options = {})
       # Have HTML content auto-converted to a text-only format.
       # The options for text type are:
       #   'html'      => Expects a string of HTML(default).
@@ -28,17 +28,17 @@ module Hominid
       #   'url'       => Expects a valid and public URL.
       #   'cid'       => Expects a campaign ID.
       #   'tid'       => Expects a template ID.
-      new.call("generateText", type, content)
+      new(options).call("generateText", type, content)
     end
     
-    def self.html_to_text(content)
+    def self.html_to_text(content, options = {})
       # Convert HTML content to text
-      new.call("generateText", 'html', content)
+      new(options).call("generateText", 'html', content)
     end
     
-    def self.ping
+    def self.ping(options = {})
       # Ping the Mailchimp API
-      new.call("ping")
+      new(options).call("ping")
     end
     
   end
