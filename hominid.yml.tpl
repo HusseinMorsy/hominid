@@ -6,7 +6,7 @@ development:
   api_key: 
   send_goodbye: false
   send_notify: false
-  double_opt: false
+  double_opt_in: false
 
 test:
   username:
@@ -14,7 +14,7 @@ test:
   api_key: 
   send_goodbye: false
   send_notify: false
-  double_opt: false
+  double_opt_in: false
 
 production:
   username:
@@ -22,4 +22,4 @@ production:
   api_key: 
   send_goodbye: false
   send_notify: false
-  double_opt: false
+  double_opt_in: false

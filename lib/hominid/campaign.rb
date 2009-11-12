@@ -116,7 +116,7 @@ module Hominid
       #     :category_name = (string)  the category name for the category id
       #     :qty           = (double)  the quantity of items ordered
       #     :cost          = (double)  the cost of a single item (i.e., not the extended cost of the line)
-      order.merge(:campaign_id => @campaign_id)
+      order = order.merge(:campaign_id => @campaign_id)
       call("campaignEcommAddOrder", order)
     end
 
