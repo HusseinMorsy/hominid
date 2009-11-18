@@ -140,9 +140,9 @@ module Hominid
     end
     alias :batch_unsubscribe :unsubscribe_many
 
-    def update_member(current_email, merge_tags = {}, email_type = "html")
+    def update_member(current_email, merge_tags = {}, email_type = "html", replace_interests = true)
       # Update a member of this list
-      call("listUpdateMember", @list_id, current_email, merge_tags, email_type, true)
+      call("listUpdateMember", @list_id, current_email, merge_tags, email_type, replace_interests)
     end
 
   end
