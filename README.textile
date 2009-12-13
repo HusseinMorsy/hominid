@@ -12,7 +12,7 @@ Hominid is hosted at "Gemcutter":http://gemcutter.org. Be sure that you have the
 
 h2. Requirements
 
-You will need a "Mailchimp":http://eepurl.com/ew8J account. Once you have your Mailchimp account set up, you will need to "generate an API key":http://admin.mailchimp.com/account/api/) in order to get started using Hominid.
+You will need a "Mailchimp":http://eepurl.com/ew8J account. Once you have your Mailchimp account set up, you will need to "generate an API key":http://admin.mailchimp.com/account/api/ in order to get started using Hominid.
 
 h2. Usage
 
