@@ -16,83 +16,71 @@ You will need a "Mailchimp":http://eepurl.com/ew8J account. Once you have your M
 
 h2. Usage
 
-Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available.
+Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available. You will need to pass your Mailchimp API key to get started:
+
+<pre><code>h = Hominid::Base.new({:api_key => API_KEY})</code></pre>
+
+You can also pass in any other config options that you would like to change from the defaults. Take a look at @Hominid::Base@ to see what the default values are.
+
+Once you have created a Hominid object, you can begin interacting with the Mailchimp account that your API key is associated with.
 
 h3. Working with Lists
 
-To work with Mailchimp lists, use the @Hominid::List@ class to work with a particular list or lists at Mailchimp. For more information, see @Hominid::List@.
+We have provided some finder methods to make working with your mailing lists easier:
 
-h4. List finder methods
+<pre><code>lists = h.lists
+list = h.find_list_by_name("Mailing List Name")
+list = h.find_list_by_id("List ID")
+list = h.find_list_by_web_id("List Web ID")</code></pre>
 
-There are finder methods available to help with finding Mailchimp lists:
+There are also finders for easily getting at List ID's, which are required for nearly all the list methods:
 
-<pre><code>lists = Hominid::List.all</code></pre>
+<pre><code>list)id = h.find_list_id_by_name("Mailing List Name")
+list_id_ = h.find_list_id_by_web_id("List Web ID")</code></pre>
 
-<pre><code>list = Hominid::List.find("List ID or List Web ID")
-list = Hominid::List.find_by_name("List Name")
-list = Hominid::List.find_by_id("List ID")
-list = Hominid::List.find_by_web_id("List Web ID")</code></pre>
+This means that you can _(for example)_ get the abuse reports for a particular mailing list:
 
-h4. Subscribing
+<pre><code>abuse_reports = h.list_abuse_reports(h.find_list_id_by_name("Mailing List Name"))</code></pre>
 
-To subscribe a person or persons to a Mailchimp list:
-
-<pre><code>list.subscribe("sample@emailaddress.com")</code></pre>
-
-<pre><code>list.subscribe_many([{:EMAIL => 'sample@emailaddress.com', :EMAIL_TYPE => 'html'}, {:EMAIL => 'another@emailaddress.com', :EMAIL_TYPE => 'html'}])</code></pre>
-
-h4. Unsubscribing
-
-To unsubscribe a person or persons from a Mailchimp list:
-
-<pre><code>list.unsubscribe("sample@emailaddress.com")</code></pre>
-
-<pre><code>list.unsubscribe_many(['sample@emailaddress.com', 'another@emailaddress.com'])</code></pre>
-
-h4. Updating
-
-In the following example, we will be changing a person's email address on the Mailchimp list from @sample@ to @another@:
-
-<pre><code>list.update_member('sample@emailaddress.com', {:EMAIL => 'another@emailaddress.com'}, 'html')</code></pre>
-
-You can also updated other attributes by including the MERGE_VARS that you want to change, such as @EMAIL@, @FNAME@, @LNAME@ and @INTERESTS@. Get a list of merge tags for a particular list by running @list.merge_tags@.
+Take a look at @Hominid::List@ to see the methods that are available for interacting with your lists.
 
 h3. Working with Campaigns
 
-To work with Mailchimp campaigns, use the @Hominid::Campaign@ class to work with a particular campaign or campaignss at Mailchimp. For more information, see @Hominid::Campaign@.
+We have provided some finder methods to make working with your campaigns easier:
 
-There are finder methods available to help with finding Mailchimp campaigns:
+<pre><code>campaigns = h.campaigns
+campaigns = h.find_campaigns_by_list_name("Mailing List Name")
+campaigns = h.find_campaigns_by_list_id("Mailing List ID")
+campaigns = h.find_campaigns_by_type("regular")
+campaign = h.find_campaign_by_id("Campaign ID")
+campaign = h.find_campaign_by_title("Campaign Title")</code></pre>
 
-<pre><code>campaigns = Hominid::Campaign.all</code></pre>
+To create a new campaign, use the @create_campaign@ method:
 
-<pre><code>campaigns = Hominid::Campaign.find_by_list_name("List Name")</code></pre>
+<pre><code>new_campaign = h.create_campaign(...)</code></pre>
 
-h4. Creating a Campaign
+Take a look at @Hominid::Campaign@ to see the methods that are available for interacting with your campaigns.
 
-You can create new campaigns easily using Hominid as well. Please refer to the documentation in @Hominid::Campaign@ for more information about the options available when creating a new campaign.
+h3. Mailchimp Helper Methods
 
-<pre><code>new_campaign = Hominid::Campaign.create('regular', options, content, segment_opts, type_opts)</code></pre>
+There are a series of helper methods that are also made available with the Hominid gem. For example, to retrieve information about the Mailchimp account associated with your API key, simply:
 
-h4. Schedule a Campaign
+<pre><code>account_details_ = h.account_details</code></pre>
 
-As an example of how to work with a particular campaign, use the @Hominid::Campaign@ class. Extending from the previous example, since the @create_campaign@ method returns the ID of the created campaign, we can use it to instantiate the @Hominid::Campaign@ class and schedule our new campaign to go be delivered 2 days from now:
+In this case, the @account_details@ object can be accessed like:
 
-<pre><code>campaign = Hominid::Campaign.new(:id => new_campaign)</code></pre>
+<pre><code>account_details.contact.company
+account_details.orders</code></pre>
 
-<pre><code>campaign.schedule_campaign(2.days.from_now)</code></pre>
+Take a look at @Hominid::Helper@ to see the helper methods that are available.
 
-h3. Helper Methods
+h3. Mailchimp Security Methods
 
-The @Hominid::Helper@ class provides a way to access the helper methods for the Mailchimp API. For example, to create a new folder for filing campaigns:
+There are a couple of security methods that are also made available with the Hominid gem. These are primarily used for dealing with API keys, and require your Mailchimp account username and password:
 
-<pre><code>folder = Hominid::Helper.create_folder("Folder Name")</code></pre>
+<pre><code>h.api_keys('username', 'password')</code></pre>
 
-h3. Security Methods
-
-The @Hominid::Security@ class provides a way to access the security methods for the Mailchimp API. You will need to pass your Mailchimp account username and password in order to create a @Hominid::Security@ object.
-
-<pre><code>security = Hominid::Security.new(:username => 'Bob', :password => 'Smith', :api_key => 'API_KEY')
-security.api_keys</code></pre>
+Take a look at @Hominid::Security@ to see the security methods that are available.
 
 h2. Contributors
 
@@ -109,6 +97,7 @@ Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very s
 * "Kelly Mahan":http://digimedia.com/
 * "C.G. Brown":http://www.projectlocker.com/
 * "Bill Abney":http://github.com/babney
+* "David Rice":http://github.com/davidjrice
 
 h2. Note on Patches/Pull Requests
 
