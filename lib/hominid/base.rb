@@ -43,7 +43,6 @@ module Hominid
     # Used internally by Hominid
     # --------------------------------
 
-    # handle common cases for which the Mailchimp API would raise Exceptions
     def clean_merge_tags(merge_tags)
       return {} unless merge_tags.is_a? Hash
       merge_tags.each do |key, value|
@@ -62,15 +61,28 @@ module Hominid
     def call(method, *args)
       @chimpApi.call(method, @config[:api_key], *args)
     rescue XMLRPC::FaultException => error
+      # Handle common cases for which the Mailchimp API would raise Exceptions
       case error.faultCode
-      when 230
+      when 200
+        raise ListError.new(error)
+      when 214, 230
         raise AlreadySubscribed.new(error)
       when 231
         raise AlreadyUnsubscribed.new(error)
-      when 232
+      when 232, 300
         raise NotExists.new(error)
-      when 233, 215
+      when 215, 233
         raise NotSubscribed.new(error)
+      when 250, 251, 252, 253, 254
+        raise ListMergeError.new(error)
+      when 270
+        raise InvalidInterestGroup.new(error)
+      when 271
+        raise InterestGroupError.new(error)
+      when 301
+        raise CampaignError.new(error)
+      when 330
+        raise InvalidEcommerceOrder.new(error)
       else
         raise APIError.new(error)
       end

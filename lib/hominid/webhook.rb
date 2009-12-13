@@ -47,7 +47,7 @@ module Hominid
     
     def initialize(*args)
       post_data = args.last
-      raise HominidError.new('Please provide the POST data from a Mailchimp webhook request.') unless post_data.is_a?(Hash)
+      raise StandardError.new('Please provide the POST data from a Mailchimp webhook request.') unless post_data.is_a?(Hash)
       post_data.merge!({"event" => "#{post_data.delete('type')}"})
       @request = hash_to_object(post_data)
     end

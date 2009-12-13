@@ -11,6 +11,24 @@ module Hominid
       super("<#{error.faultCode}> #{error.message}")
     end
   end
+  
+  class AlreadySubscribed < APIError
+  end
+
+  class AlreadyUnsubscribed < APIError
+  end
+  
+  class CampaignError < APIError
+  end
+  
+  class InterestGroupError < APIError
+  end
+  
+  class InvalidInterestGroup < InterestGroupError
+  end
+  
+  class InvalidEcommerceOrder < APIError
+  end
 
   class ListError < APIError
   end
@@ -21,16 +39,10 @@ module Hominid
   class ListMergeError < ListError
   end
 
-  class AlreadySubscribed < ListEmailError
+  class NotExists < APIError
   end
 
-  class AlreadyUnsubscribed < ListEmailError
-  end
-
-  class NotExists < ListEmailError
-  end
-
-  class NotSubscribed < ListEmailError
+  class NotSubscribed < APIError
   end
 
   class CommunicationError < StandardError
@@ -40,15 +52,8 @@ module Hominid
   end
 end
 
-begin
-  # include the provided rake task
-  require 'rake'
-  unless Rake::Task.task_defined? "hominid:config"
-    load File.join(File.dirname(__FILE__), '..', 'tasks', 'rails', 'hominid.rake')
-  end
-rescue LoadError
-  # silently skip rake task inclusion unless the rake gem is installed
-end
-
+require 'hominid/list'
+require 'hominid/campaign'
+require 'hominid/helper'
 require 'hominid/base'
 
