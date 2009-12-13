@@ -1,74 +1,89 @@
 module Hominid
-  class Campaign < Base
+  module Campaign
     
     # CAMPAIGN RELATED METHODS
     
-    attr_reader :campaign_id
-    attr_reader :attributes
-
-    def initialize(*args)
-      options = args.last.is_a?(Hash) ? args.last : {}
-      raise StandardError.new('Please provide a Campaign ID.') unless options[:id]
-      @campaign_id = options.delete(:id)
-      @attributes = options.delete(:attributes)
-      super(options)
-    end
-    
-    # Finder Methods
-
-    def self.all
-      # Get all campaigns for this mailchimp account
-      new(:id => 0).call("campaigns").to_a.collect { |c| Campaign.new(:id => c.delete('id'), :attributes => c) }
-    end
-
-    def self.find_by_list_name(list_name)
-      # Get all campaigns for the given list.
-      new(:id => 0).call("campaigns", {:list_id => List.find_by_name(list_name).list_id}).to_a.collect { |c| Campaign.new(:id=> c.delete('id'), :attributes => c) }
-    end
-
-    def self.find_by_list_id(list_id)
-      # Get all campaigns for the given list.
-      new(:id => 0).call("campaigns", {:list_id => list_id}).to_a.collect { |c| Campaign.new(:id=> c.delete('id'), :attributes => c) }
-    end
-
-    def self.find_by_title(title)
-      # Find a campaign by title.
-      all.find { |c| c.attributes['title'] =~ /#{title}/ }
-    end
-
-    def self.find_by_type(type)
-      # Find campaigns by type. Possible choices are:
-      #   'regular'
-      #   'plaintext'
-      #   'absplit'
-      #   'rss'
-      #   'inspection'
-      #   'trans'
-      #   'auto'
+    def campaigns(filters = {}, start = 0, limit = 25)
+      # Get all the campaigns for this account.
       #
-      all.find { |campaign| campaign.attributes['type'] =~ /#{type}/ }
-    end
-
-    def self.find_by_web_id(web_id)
-      # Find campaigns by web_id.
-      all.find { |campaign| campaign.attributes['web_id'] == web_id.to_i }
-    end
-
-    def self.find_by_id(id)
-      # Find a campaign by id.
-      all.find { |campaign| (campaign.campaign_id == id.to_s) }
-    end
-
-    def self.find(id_or_web_id)
-      # Campaign finder method.
-      all = self.all
-      campaign = self.find_by_id(id_or_web_id.to_s).to_a + self.find_by_web_id(id_or_web_id.to_i).to_a
-      return campaign.blank? ? nil : campaign.first
+      # Parameters:
+      # filters (Hash)    = A hash of filters to apply to query. See the Mailchimp API documentation for more info.
+      # start   (Integer) = Control paging of results.
+      # limit   (Integer) = Number of campaigns to return. Upper limit set at 1000.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", filters, start, limit)
     end
     
-    # ActiveRecord-Type Methods
+    def find_campaign_by_id(campaign_id)
+      # Find a campaign by id
+      #
+      # Parameters:
+      # campaign_id (String) = The unique ID of the campaign to return.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", {:campaign_id => campaign_id})
+    end
     
-    def self.create(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
+    def find_campaign_by_title(title)
+      # Find a campaign by name
+      #
+      # Parameters:
+      # title (String) = The title of the campaign to return.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", {:title => title})
+    end
+    
+    def find_campaigns_by_list_name(list_name, start = 0, limit = 25)
+      # Find campaigns by list name
+      #
+      # Parameters:
+      # list_name (String)  = The name of the mailing list to return campaigns for.
+      # start     (Integer) = Control paging of results.
+      # limit     (Integer) = Number of campaigns to return. Upper limit set at 1000.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", {:list_id => find_list_id_by_name(list_name)}, start, limit)
+    end
+    
+    def find_campaigns_by_list_id(list_id, start = 0, limit = 25)
+      # Find campaigns by list id
+      #
+      # Parameters:
+      # list_id (String)  = The ID of the mailing list to return campaigns for.
+      # start   (Integer) = Control paging of results.
+      # limit   (Integer) = Number of campaigns to return. Upper limit set at 1000.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", {:list_id => list_id}, start, limit)
+    end
+    
+    def find_campaigns_by_type(type, start = 0, limit = 25)
+      # Find campaigns by type
+      #
+      # Parameters:
+      # type   (String)  = One of: 'regular', 'plaintext', 'absplit', 'rss', 'inspection', 'trans', 'auto'
+      # start  (Integer) = Control paging of results.
+      # limit  (Integer) = Number of campaigns to return. Upper limit set at 1000.
+      #
+      # Returns:
+      # An array of campaigns.
+      #
+      call("campaigns", {:type => type}, start, limit)
+    end
+    
+    def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
       # Create a new draft campaign to send.
       #
       # Parameters:
@@ -102,12 +117,11 @@ module Hominid
       # Returns:
       # The ID for the created campaign. (String)
       #
-      new(:id => 0).call("campaignCreate", type, options, content, segment_options, type_opts)
+      call("campaignCreate", type, options, content, segment_options, type_opts)
       # TODO: Should we return the new campaign instead of the ID returned from the API?
-      #       This would make it act a bit more like ActiveRecord.
     end
     
-    def self.folders
+    def folders
       # List all the folders for a user account.
       #
       # Returns:
@@ -115,10 +129,10 @@ module Hominid
       #   folder_id (Integer) = Folder Id for the given folder, this can be used in the campaigns() function to filter on.
       #   name      (String)  = Name of the given folder.
       #
-      new(:id => 0).call("campaignFolders")
+      call("campaignFolders")
     end
     
-    def self.templates
+    def templates
       # Retrieve all templates defined for your user account.
       #
       # Returns:
@@ -129,15 +143,14 @@ module Hominid
       #   sections  (Array)   = An associative array of editable sections in the template that can accept custom HTML
       #                         when sending a campaign.
       #
-      new(:id => 0).call("campaignTemplates")
+      call("campaignTemplates")
     end
     
-    # Campaign Methods
-    
-    def abuse_reports(start = 0, limit = 500, since = "2000-01-01 00:00:00")
+    def campaign_abuse_reports(campaign_id, start = 0, limit = 500, since = "2000-01-01 00:00:00")
       # Get all email addresses that complained about a given campaign.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer)   = Page number to start at. Defaults to 0.
       # limit (Integer)   = Number of results to return. Defaults to 500. Upper limit is 1000.
       # since (DateTime)  = Only return email reports since this date. Must be in YYYY-MM-DD HH:II:SS format (GMT).
@@ -145,25 +158,29 @@ module Hominid
       # Returns:
       # An array of abuse reports for this list in the format:
       # 
-      call("campaignAbuseReports", @campaign_id, start, limit, since)
+      call("campaignAbuseReports", campaign_id, start, limit, since)
     end
     
-    def advice
+    def advice(campaign_id)
       # Retrieve the text presented in our app for how a campaign performed and any advice we may have for you - best
       # suited for display in customized reports pages. Note: some messages will contain HTML - clean tags as necessary.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # An array of advice on the campaign's performance including:
       #   msg   (String) = Advice message.
       #   type  (String) = One of: negative, positive, or neutral.
       #
-      call("campaignAdvice", @campaign_id)
+      call("campaignAdvice", campaign_id)
     end
     
-    def add_order(order)
+    def add_order(campaign_id, order)
       # Attach Ecommerce Order Information to a Campaign.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # order (Hash) = A hash of order information including:
       #   id          (String)  = The order id
       #   email_id    (String)  = Email id of the subscriber (mc_eid query string)
@@ -185,14 +202,17 @@ module Hominid
       # Returns:
       # True if successful, error code if not.
       #
-      order = order.merge(:campaign_id => @campaign_id)
+      order = order.merge(:campaign_id => campaign_id)
       call("campaignEcommAddOrder", order)
     end
     alias :ecomm_add_order :add_order
     
-    def analytics
+    def analytics(campaign_id)
       # Retrieve the Google Analytics data we've collected for this campaign. Note, requires Google
       # Analytics Add-on to be installed and configured.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # An array of analytics for the passed campaign including:
@@ -208,15 +228,16 @@ module Hominid
       #   ecomm_conversions (Integer) = Number Ecommerce transactions tracked.
       #   goals             (Array)   = An array containing goal names and number of conversions.
       #
-      call("campaignAnalytics", @campaign_id)
+      call("campaignAnalytics", campaign_id)
     end
     
-    def bounce_messages(start = 0, limit = 25, since = "2000-01-01")
+    def bounce_messages(campaign_id, start = 0, limit = 25, since = "2000-01-01")
       # Retrieve the full bounce messages for the given campaign. Note that this can return very large amounts
       # of data depending on how large the campaign was and how much cruft the bounce provider returned. Also,
       # messages over 30 days old are subject to being removed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 50.
       # since (Date)    = Pull only messages since this time - use YYYY-MM-DD format in GMT.
@@ -227,14 +248,15 @@ module Hominid
       #   email   (String) = The email address that bounced.
       #   message (String) = The entire bounce message received.
       #
-      call("campaignBounceMessages", @campaign_id, start, limit, since)
+      call("campaignBounceMessages", campaign_id, start, limit, since)
     end
     
-    def click_details(url, start = 0, limit = 1000)
+    def click_details(campaign_id, url, start = 0, limit = 1000)
       # Return the list of email addresses that clicked on a given url, and how many times they clicked.
       # Note: Requires the AIM module to be installed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # url   (String)  = The URL of the link that was clicked on.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
@@ -244,26 +266,30 @@ module Hominid
       #   email   (String)  = Email address that opened the campaign.
       #   clicks  (Integer) = Total number of times the URL was clicked on by this email address.
       #
-      call("campaignClickDetailAIM", @campaign_id, url, start, limit)
+      call("campaignClickDetailAIM", campaign_id, url, start, limit)
     end
-    alias :click_detail_aim, :click_details
+    alias :click_detail_aim :click_details
     
-    def click_stats
+    def click_stats(campaign_id)
       # Get an array of the urls being tracked, and their click counts for a given campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # A struct of URLs and associated statistics including:
       #   clicks (Integer) = Number of times the specific link was clicked.
       #   unique (Integer) = Number of unique people who clicked on the specific link.
       #
-      call("campaignClickStats", @campaign_id)
+      call("campaignClickStats", campaign_id)
     end
     
-    def content(for_archive = true)
+    def content(campaign_id, for_archive = true)
       # Get the content (both html and text) for a campaign either as it would appear in the campaign archive
       # or as the raw, original content.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # for_archive (Boolean) = Controls whether we return the Archive version (true) or the Raw version (false),
       #                         defaults to true.
       #
@@ -272,22 +298,28 @@ module Hominid
       #   html (String) = The HTML content used for the campgain with merge tags intact.
       #   text (String) = The Text content used for the campgain with merge tags intact.
       #
-      call("campaignContent", @campaign_id, for_archive)
+      call("campaignContent", campaign_id, for_archive)
     end
     alias :campaign_content :content
     
-    def delete
+    def delete(campaign_id)
       # Delete a campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # True if successful, error code if not.
       #
-      call("campaignDelete", @campaign_id)
+      call("campaignDelete", campaign_id)
     end
     alias :delete_campaign :delete
     
-    def email_domain_performance
+    def email_domain_performance(campaign_id)
       # Get the top 5 performing email domains for this campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # An array of email domains and their associated stats including:
@@ -305,15 +337,16 @@ module Hominid
       #   clicks_pct  (Integer) = Percentage of clicks from this domain (whole number).
       #   unsubs_pct  (Integer) = Percentage of unsubs from this domain (whole number).
       #
-      call("campaignEmailDomainPerformance", @campaign_id)
+      call("campaignEmailDomainPerformance", campaign_id)
     end
-    alias :email_performance, :email_domain_performance
+    alias :email_performance :email_domain_performance
     
-    def email_stats(email)
+    def email_stats(campaign_id, email)
       # Given a campaign and email address, return the entire click and open history with timestamps, ordered by time.
       # Note: Requires the AIM module to be installed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # email (String) = The email address to check OR the email "id" returned from listMemberInfo, Webhooks, and Campaigns.
       #
       # Returns:
@@ -322,16 +355,17 @@ module Hominid
       #   timestamp (DateTime)  = Time the action occurred.
       #   url       (String)    = For clicks, the URL that was clicked.
       #
-      call("campaignEmailStatsAIM", @campaign_id, email)
+      call("campaignEmailStatsAIM", campaign_id, email)
     end
-    alias :email_stats_aim, :email_stats
+    alias :email_stats_aim :email_stats
     
-    def email_stats_all(start = 0, limit = 100)
+    def email_stats_all(campaign_id, start = 0, limit = 100)
       # Given a campaign and correct paging limits, return the entire click and open history with timestamps, ordered by time,
       # for every user a campaign was delivered to.
       # Note: Requires the AIM module to be installed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 1000.
       #
@@ -341,43 +375,46 @@ module Hominid
       #   timestamp (DateTime)  = Time the action occurred.
       #   url       (String)    = For clicks, the URL that was clicked.
       #
-      call("campaignEmailStatsAIMAll", @campaign_id, start, limit)
+      call("campaignEmailStatsAIMAll", campaign_id, start, limit)
     end
-    alias :email_stats_aim_all, :email_stats_all
+    alias :email_stats_aim_all :email_stats_all
     
-    def hard_bounces(start = 0, limit = 1000)
+    def hard_bounces(campaign_id, start = 0, limit = 1000)
       # Get all email addresses with Hard Bounces for a given campaign.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
       #
       # Returns:
       # An array of email addresses with Hard Bounces.
       #
-      call("campaignHardBounces", @campaign_id, start, limit)
+      call("campaignHardBounces", campaign_id, start, limit)
     end
     
-    def not_opened(start = 0, limit = 1000)
+    def not_opened(campaign_id, start = 0, limit = 1000)
       # Retrieve the list of email addresses that did not open a given campaign.
       # Note: Requires the AIM module to be installed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
       #
       # Returns:
       # A list of email addresses that did not open a campaign.
       #
-      call("campaignNotOpenedAIM", @campaign_id, start, limit)
+      call("campaignNotOpenedAIM", campaign_id, start, limit)
     end
-    alias :not_opened_aim, :not_opened
+    alias :not_opened_aim :not_opened
     
-    def opened(start = 0, limit = 1000)
+    def opened(campaign_id, start = 0, limit = 1000)
       # Retrieve the list of email addresses that opened a given campaign with how many times they opened.
       # Note: this AIM function is free and does not actually require the AIM module to be installed.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
       #
@@ -386,14 +423,15 @@ module Hominid
       #   email       (String)  = Email address that opened the campaign.
       #   open_count  (Integer) = Total number of times the campaign was opened by this email address.
       #
-      call("campaignOpenedAIM", @campaign_id, start, limit)
+      call("campaignOpenedAIM", campaign_id, start, limit)
     end
-    alias :opened_aim, :opened
+    alias :opened_aim :opened
     
-    def orders(start = 0, limit = 100, since = "2001-01-01 00:00:00")
+    def orders(campaign_id, start = 0, limit = 100, since = "2001-01-01 00:00:00")
       # Retrieve the Ecommerce Orders.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer)   = For large data sets, the page number to start at.
       # limit (Integer)   = For large data sets, the number of results to return. Upper limit set at 500.
       # since (DateTime)  = Pull only messages since this time - use YYYY-MM-DD HH:II:SS format in GMT.
@@ -410,41 +448,51 @@ module Hominid
       #   order_date  (String)  = The date the order was tracked - from the store if possible, otherwise the GMT time received.
       #   lines       (Array)   = Containing details of the order - product, category, quantity, item cost.
       #
-      call("campaignEcommOrders", @campaign_id, start, limit, since)
+      call("campaignEcommOrders", campaign_id, start, limit, since)
     end
-    alias :ecomm_orders, :orders
+    alias :ecomm_orders :orders
     
-    def pause
+    def pause(campaign_id)
       # Pause an AutoResponder orRSS campaign from sending.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # True if successful.
-      call("campaignPause", @campaign_id)
+      call("campaignPause", campaign_id)
     end
     
-    def replicate
+    def replicate(campaign_id)
       # Replicate a campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # The ID of the newly created replicated campaign. (String)
       #
-      call("campaignReplicate", @campaign_id)
+      call("campaignReplicate", campaign_id)
     end
-    alias :replicate_campaign, :replicate
+    alias :replicate_campaign :replicate
     
-    def resume
+    def resume(campaign_id)
       # Resume sending an AutoResponder or RSS campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # True if successful.
       #
-      call("campaignResume", @campaign_id)
+      call("campaignResume", campaign_id)
     end
     
-    def schedule(time = "#{1.day.from_now}", time_b)
+    def schedule(campaign_id, time = "#{1.day.from_now}", time_b = "")
       # Schedule a campaign to be sent in the future.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # time    (DateTime) =  The time to schedule the campaign. For A/B Split "schedule" campaigns, the time
       #                       for Group A - in YYYY-MM-DD HH:II:SS format in GMT.
       # time_b  (DateTime) =  The time to schedule Group B of an A/B Split "schedule" campaign - in
@@ -453,38 +501,43 @@ module Hominid
       # Returns:
       # True if successful.
       #
-      call("campaignSchedule", @campaign_id, time, time_b)
+      call("campaignSchedule", campaign_id, time, time_b)
     end
-    alias :schedule_campaign, :schedule
+    alias :schedule_campaign :schedule
     
-    def send
+    def send(campaign_id)
       # Send this campaign immediately.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign to send.
       #
       # Returns:
       # True if successful.
-      call("campaignSendNow", @campaign_id)
+      call("campaignSendNow", campaign_id)
     end
-    alias :send_now, :send
+    alias :send_now :send
     
-    def send_test(emails = {}, send_type = nil)
+    def send_test(campaign_id, emails = {}, send_type = nil)
       # Send a test of this campaign to the provided email address(es).
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # emails    (Hash)    = A hash of email addresses to receive the test message.
       # send_type (String)  = One of 'html', 'text' or nil (send both). Defaults to nil.
       #
       # Returns:
       # True if successful.
       #
-      call("campaignSendTest", @campaign_id, emails, send_type)
+      call("campaignSendTest", campaign_id, emails, send_type)
     end
     
-    def share_report(options = {})
+    def share_report(campaign_id, options = {})
       # Get the URL to a customized VIP Report for the specified campaign and optionally send an email
       # to someone with links to it. Note subsequent calls will overwrite anything already set for the
       # same campign (eg, the password).
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # options (Hash) = A hash of parameters which can be used to configure the shared report, including: (optional)
       #   header_type (String)  = One of "text" or "image". Defaults to 'text'. (optional)
       #   header_data (String)  = If "header_type" is text, the text to display. If "header_type" is "image"
@@ -508,24 +561,28 @@ module Hominid
       #                          For non-secure reports, this will not be returned.
       #   password    (String) = If secured, the password for the report, otherwise this field will not be returned.
       #
-      call("campaignShareReport", @campaign_id, options)
+      call("campaignShareReport", campaign_id, options)
     end
     
-    def soft_bounces(start = 0, limit = 1000)
+    def soft_bounces(campaign_id, start = 0, limit = 1000)
       # Get all email addresses with Soft Bounces for a given campaign.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
       #
       # Returns:
       # An array of email addresses with Soft Bounces.
       #
-      call("campaignSoftBounces", @campaign_id, start, limit)
+      call("campaignSoftBounces", campaign_id, start, limit)
     end
     
-    def stats
+    def stats(campaign_id)
       # Get all the relevant campaign statistics for this campaign.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # An array of statistics for this campaign including:
@@ -545,43 +602,48 @@ module Hominid
       #   users_who_clicked (Integer) = Number of unique recipients who clicked on a link in the campaign.
       #   emails_sent       (Integer) = Number of email addresses campaign was sent to.
       #
-      call("campaignStats", @campaign_id)
+      call("campaignStats", campaign_id)
     end
     alias :campaign_stats :stats
     
-    def update(name, value)
+    def update(campaign_id, name, value)
       # Update just about any setting for a campaign that has not been sent.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # name  (String)    = The parameter name.
       # value (Variable)  = An appropriate value for the parameter.
       #
       # Returns:
       # True if successful, error code if not.
       #
-      call("campaignUpdate", @campaign_id, name, value)
+      call("campaignUpdate", campaign_id, name, value)
     end
     
-    def unschedule
+    def unschedule(campaign_id)
       # Unschedule a campaign that is scheduled to be sent in the future.
+      #
+      # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       #
       # Returns:
       # True if successful.
       #
-      call("campaignUnschedule", @campaign_id)
+      call("campaignUnschedule", campaign_id)
     end
     
-    def unsubsribes(start = 0, limit = 1000)
+    def unsubsribes(campaign_id, start = 0, limit = 1000)
       # Get all unsubscribed email addresses for a given campaign.
       #
       # Parameters:
+      # campaign_id (String) = The ID of the campaign.
       # start (Integer) = For large data sets, the page number to start at.
       # limit (Integer) = For large data sets, the number of results to return. Upper limit set at 15000.
       #
       # Returns:
       # An array of email addresses that unsubscribed from this campaign.
       #
-      call("campaignUnsubscribes", @campaign_id, start, limit)
+      call("campaignUnsubscribes", campaign_id, start, limit)
     end
     
   end

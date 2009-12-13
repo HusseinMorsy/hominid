@@ -1,5 +1,9 @@
 module Hominid
   class Base
+    include Hominid::Campaign
+    include Hominid::Helper
+    include Hominid::List
+    include Hominid::Security
     
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
     MAILCHIMP_API_VERSION = "1.2"
@@ -28,17 +32,6 @@ module Hominid
     # --------------------------------
     # Used internally by Hominid
     # --------------------------------
-    
-    def clean_merge_tags(merge_tags)
-      return {} unless merge_tags.is_a? Hash
-      merge_tags.each do |key, value|
-        if merge_tags[key].is_a? String
-          merge_tags[key] = value.gsub("\v", '')
-        elsif merge_tags[key].nil?
-          merge_tags[key] = ''
-        end
-      end
-    end
 
     def apply_defaults_to(options)
       @config.merge(options)
@@ -72,5 +65,32 @@ module Hominid
       raise CommunicationError.new(error.message)
     end
     
+    def clean_merge_tags(merge_tags)
+      return {} unless merge_tags.is_a? Hash
+      merge_tags.each do |key, value|
+        if merge_tags[key].is_a? String
+          merge_tags[key] = value.gsub("\v", '')
+        elsif merge_tags[key].nil?
+          merge_tags[key] = ''
+        end
+      end
+    end
+    
+    def hash_to_object(object)
+      return case object
+      when Hash
+        object = object.clone
+        object.each do |key, value|
+          object[key.downcase] = hash_to_object(value)
+        end
+        OpenStruct.new(object)
+      when Array
+        object = object.clone
+        object.map! { |i| hash_to_object(i) }
+      else
+        object
+      end
+    end
+
   end
 end

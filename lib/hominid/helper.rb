@@ -1,9 +1,9 @@
 module Hominid
-  class Helper < Base
+  module Helper
     
     # HELPER METHODS
     
-    def self.account_details
+    def account_details
       # Retrieve lots of account information including payments made, plan info,
       # some account stats, installed modules, contact info, and more. No private
       # information like Credit Card numbers is available.
@@ -35,10 +35,10 @@ module Hominid
       # orders          (Array)     = Order details for the account, include order_id, type, cost, date/time, and any
       #                               credits applied to the order.
       #
-      new(options).call("getAccountDetails")
+      hash_to_object(call("getAccountDetails"))
     end
     
-     def self.inline_css(html, strip_css = false)
+     def inline_css(html, strip_css = false)
        # Send your HTML content to have the CSS inlined and optionally remove the original styles.
        #
        # Paramters:
@@ -48,11 +48,11 @@ module Hominid
        # Returns:
        # Your HTML content with all CSS inlined, just like if we sent it. (String)
        #
-      new(options).call("inlineCss", html, strip_css)
+      call("inlineCss", html, strip_css)
     end
     alias :convert_css_to_inline :inline_css
     
-    def self.create_folder(name)
+    def create_folder(name)
       # Create a new folder to file campaigns in.
       #
       # Parameters:
@@ -60,10 +60,10 @@ module Hominid
       #
       # Returns:
       # The folder_id of the newly created folder. (Integer)
-      new(options).call("createFolder", name)
+      call("createFolder", name)
     end
     
-    def self.generate_text(type, content)
+    def generate_text(type, content)
       # Have HTML content auto-converted to a text-only format. You can send: plain HTML, an array of Template content,
       # an existing Campaign Id, or an existing Template Id. Note that this will not save anything to or update any of
       # your lists, campaigns, or templates.
@@ -77,10 +77,10 @@ module Hominid
       # Returns:
       # The content passed in converted to text. (String)
       #
-      new(options).call("generateText", type, content)
+      call("generateText", type, content)
     end
     
-    def self.ping(options = {})
+    def ping(options = {})
       # "Ping" the MailChimp API - a simple method you can call that will return a constant value as long as everything
       # is good. Note than unlike most all of our methods, we don't throw an Exception if we are having issues. You will
       # simply receive a different string back that will explain our view on what is going on.
@@ -88,7 +88,7 @@ module Hominid
       # Returns:
       # "Everything's Chimpy!"
       #
-      new(options).call("ping")
+      call("ping")
     end
     
   end

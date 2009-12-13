@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hominid}
-  s.version = "2.0.1"
+  s.version = "2.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Getting", "Michael Str\303\274der"]
-  s.date = %q{2009-11-11}
+  s.date = %q{2009-12-13}
   s.description = %q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
@@ -23,14 +23,12 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "hominid.gemspec",
-     "hominid.yml.tpl",
      "lib/hominid.rb",
      "lib/hominid/base.rb",
      "lib/hominid/campaign.rb",
      "lib/hominid/helper.rb",
      "lib/hominid/list.rb",
-     "lib/hominid/webhook.rb",
-     "tasks/rails/hominid.rake",
+     "lib/hominid/security.rb",
      "test/hominid_test.rb",
      "test/test_helper.rb"
   ]
