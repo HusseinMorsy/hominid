@@ -4,49 +4,34 @@ Hominid is a Ruby gem that provides a wrapper for interacting with the "Mailchim
 
 h2. Installation
 
-<pre><code>sudo gem install hominid, :version => '>= 2.0.1', :source => "http://gemcutter.org"</code></pre>
+<pre><code>sudo gem install hominid</code></pre>
 
 Hominid is hosted at "Gemcutter":http://gemcutter.org. Be sure that you have the Gemcutter gem installed if you are having trouble installing Hominid:
 
-<pre><code>sudo gem install gemcutter
-gem tumble</code></pre>
+<pre><code>sudo gem install gemcutter</code></pre>
 
-h2. Configuration
+h2. Requirements
 
-You will need to create a "Mailchimp":http://www.mailchimp.com/signup account and get your API key (available at http://admin.mailchimp.com/account/api/) in order to get started.
-
-If you are using Hominid inside a Rails application, you can create a config file at @/config/hominid.yml@ with your Mailchimp account information and basic configuration options:
-
-<pre><code>development:
- username: USERNAME
- password: PASSWORD
- api_key: API KEY
- send_goodbye: false
- send_notify: false
- double_opt: false
-
-...</code></pre>
-
-Run @rake hominid:config@ from within a Rails app to create an empty config file.
-Note: You will need to <pre><code>require 'hominid'</code></pre> in your @Rakefile@ to make this rake task available to your application.
+You will need a "Mailchimp":http://eepurl.com/ew8J account. Once you have your Mailchimp account set up, you will need to "generate an API key":http://admin.mailchimp.com/account/api/) in order to get started using Hominid.
 
 h2. Usage
 
-Not all API methods are supported (yet). Currently there are classes for working with lists (_Hominid::List_), campaigns (_Hominid::Campaign_) and accessing the helper methods (_Hominid::Helper_).
+Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available.
 
 h3. Working with Lists
 
-The _Hominid::List_ class is available for working finding lists and working with particular lists. See _Hominid::List_ for more information.
+To work with Mailchimp lists, use the @Hominid::List@ class to work with a particular list or lists at Mailchimp. For more information, see @Hominid::List@.
 
-h4. List Finder Methods
+h4. List finder methods
 
-There are finder methods for working with lists. Refer to _Hominid::List_ to see the other finders availables.
+There are finder methods available to help with finding Mailchimp lists:
 
 <pre><code>lists = Hominid::List.all</code></pre>
 
-<pre><code>list = Hominid::List.find_by_name("List Name")</code></pre>
-
-<pre><code>list = Hominid::List.find(id_or_web_id)</code></pre>
+<pre><code>list = Hominid::List.find("List ID or List Web ID")
+list = Hominid::List.find_by_name("List Name")
+list = Hominid::List.find_by_id("List ID")
+list = Hominid::List.find_by_web_id("List Web ID")</code></pre>
 
 h4. Subscribing
 
@@ -74,11 +59,9 @@ You can also updated other attributes by including the MERGE_VARS that you want 
 
 h3. Working with Campaigns
 
-The _Hominid::Campaign_ class provides methods for working with a campaigns.
+To work with Mailchimp campaigns, use the @Hominid::Campaign@ class to work with a particular campaign or campaignss at Mailchimp. For more information, see @Hominid::Campaign@.
 
-h4. Campaign Finder Methods
-
-There are finder methods for campaigns as well. Refer to _Hominid::Campaign_ to see the other finders available.
+There are finder methods available to help with finding Mailchimp campaigns:
 
 <pre><code>campaigns = Hominid::Campaign.all</code></pre>
 
@@ -86,13 +69,13 @@ There are finder methods for campaigns as well. Refer to _Hominid::Campaign_ to 
 
 h4. Creating a Campaign
 
-You can create new campaigns using Hominid as well. Please refer to the documentation in _Hominid::Base_ for more information about the options available when creating a new campaign.
+You can create new campaigns easily using Hominid as well. Please refer to the documentation in @Hominid::Campaign@ for more information about the options available when creating a new campaign.
 
 <pre><code>new_campaign = Hominid::Campaign.create('regular', options, content, segment_opts, type_opts)</code></pre>
 
 h4. Schedule a Campaign
 
-As an example of how to work with a particular campaign, use the _Hominid::Campaign_ class. Extending from the previous example, since the _#create_campaign_ method returns the ID of the created campaign, we can use it to instantiate the _Hominid::Campaign_ class and schedule our new campaign to go be delivered 2 days from now:
+As an example of how to work with a particular campaign, use the @Hominid::Campaign@ class. Extending from the previous example, since the @create_campaign@ method returns the ID of the created campaign, we can use it to instantiate the @Hominid::Campaign@ class and schedule our new campaign to go be delivered 2 days from now:
 
 <pre><code>campaign = Hominid::Campaign.new(:id => new_campaign)</code></pre>
 
@@ -100,37 +83,16 @@ As an example of how to work with a particular campaign, use the _Hominid::Campa
 
 h3. Helper Methods
 
-The _Hominid::Helper_ class provides a way to access the helper methods for the Mailchimp API. For example, to create a new folder for filing campaigns:
+The @Hominid::Helper@ class provides a way to access the helper methods for the Mailchimp API. For example, to create a new folder for filing campaigns:
 
 <pre><code>folder = Hominid::Helper.create_folder("Folder Name")</code></pre>
 
-h2. Syncing Your Application
+h3. Security Methods
 
-If you are integrating an application with Mailchimp, Hominid will provide a way for your app to connect with your Mailchimp account. However, it does not provide a way for Mailchimp to connect to your application, which is why Mailchimp has implemented "web hooks":http://www.mailchimp.com/api/webhooks/.
+The @Hominid::Security@ class provides a way to access the security methods for the Mailchimp API. You will need to pass your Mailchimp account username and password in order to create a @Hominid::Security@ object.
 
-The _Hominid::Webhook_ class helps with receiving <tt>POST</tt> data from a Mailchimp webhook:
-
-<pre><code>hook = Hominid::Webhook.new(params)
-case hook.event
-when "subscribe"
-  user = User.find_by_email(hook.email)
-  user.opted_in = true
-  user.save
-when "unsubscribe"
-  user = User.find_by_email(hook.email)
-  user.opted_in = false
-  user.save
-when "profile"
-  user = User.find_by_email(hook.email)
-  user.first_name = hook.first_name
-  user.last_name = hook.last_name
-  user.email_type = hook.email_type
-  user.save
-when "upemail"
-  user = User.find_by_email(hook.old_email)
-  user.email = hook.new_email
-  user.save
-end</code></pre>
+<pre><code>security = Hominid::Security.new(:username => 'Bob', :password => 'Smith', :api_key => 'API_KEY')
+security.api_keys</code></pre>
 
 h2. Contributors
 
@@ -146,6 +108,7 @@ Hominid is maintained by "Brian Getting":http://terra-firma-design.com. A very s
 * "Matthew Carlson":http://mandarinsoda.com/
 * "Kelly Mahan":http://digimedia.com/
 * "C.G. Brown":http://www.projectlocker.com/
+* "Bill Abney":http://github.com/babney
 
 h2. Note on Patches/Pull Requests
 
@@ -158,4 +121,3 @@ h2. Note on Patches/Pull Requests
 h2. Copyright
 
 Copyright (c) 2009 Brian Getting. See LICENSE for details.
-

@@ -12,37 +12,16 @@ module Hominid
     end
   end
   
-  class AlreadySubscribed < APIError
-  end
-
-  class AlreadyUnsubscribed < APIError
-  end
-  
   class CampaignError < APIError
   end
   
-  class InterestGroupError < APIError
-  end
-  
-  class InvalidInterestGroup < InterestGroupError
-  end
-  
-  class InvalidEcommerceOrder < APIError
-  end
-
   class ListError < APIError
   end
-
-  class ListEmailError < ListError
+  
+  class UserError < APIError
   end
-
-  class ListMergeError < ListError
-  end
-
-  class NotExists < APIError
-  end
-
-  class NotSubscribed < APIError
+  
+  class ValidationError < APIError
   end
 
   class CommunicationError < StandardError
@@ -50,10 +29,7 @@ module Hominid
       super(message)
     end
   end
+  
 end
 
-require 'hominid/list'
-require 'hominid/campaign'
-require 'hominid/helper'
 require 'hominid/base'
-
