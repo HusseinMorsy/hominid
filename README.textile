@@ -37,7 +37,7 @@ list = h.find_list_by_web_id("List Web ID")</code></pre>
 
 There are also finders for easily getting at List ID's, which are required for nearly all the list methods:
 
-<pre><code>list)id = h.find_list_id_by_name("Mailing List Name")
+<pre><code>list_id = h.find_list_id_by_name("Mailing List Name")
 list_id_ = h.find_list_id_by_web_id("List Web ID")</code></pre>
 
 This means that you can _(for example)_ get the abuse reports for a particular mailing list:
