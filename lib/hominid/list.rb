@@ -326,8 +326,8 @@ module Hominid
       # current_email (String)  = The email address to unsubscribe OR the email "id".
       # options       (Hash)    = A hash of unsubscribe options including:
       #                             :delete_member (defaults to false)
-      #                             :send_goodbye (defaults to true)
-      #                             :send_notify (defaults to true).
+      #                             :send_goodbye (defaults to false)
+      #                             :send_notify (defaults to false).
       #
       # Returns:
       # True on success, false on failure
@@ -344,7 +344,7 @@ module Hominid
       # emails  (Array)   = An array of email addresses to unsubscribe.
       # options (Hash)    = A hash of unsubscribe options including:
       #                       :delete_member (defaults to false)
-      #                       :send_goodbye (defaults to true)
+      #                       :send_goodbye (defaults to false)
       #                       :send_notify (defaults to false)
       #
       # Returns:
