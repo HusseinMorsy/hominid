@@ -24,12 +24,12 @@ module Hominid
       # campaign_id (String) = The unique ID of the campaign to return.
       #
       # Returns:
-      # An array of campaigns.
+      # A single campaign.
       #
-      call("campaigns", {:campaign_id => campaign_id})
+      call("campaigns", {:campaign_id => campaign_id}).first
     end
     
-    def find_campaign_by_title(title)
+    def find_campaigns_by_title(title)
       # Find a campaign by name
       #
       # Parameters:
