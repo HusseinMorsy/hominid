@@ -16,7 +16,9 @@ You will need a "Mailchimp":http://eepurl.com/ew8J account. Once you have your M
 
 h2. Usage
 
-Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available. You will need to pass your Mailchimp API key to get started:
+Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available. Please note in order to use some methods you will need to have "A.I.M. Reports":https://admin.mailchimp.com/account/addons installed on your Mailchimp account.
+
+You will need to pass your Mailchimp API key to get started:
 
 <pre><code>h = Hominid::Base.new({:api_key => API_KEY})</code></pre>
 
