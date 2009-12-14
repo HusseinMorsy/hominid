@@ -238,11 +238,6 @@ module Hominid
       # email     (String)    = Member email address.
       # timestamp (DateTime)  = timestamp of their associated status date in GMT.
       #
-      options = args.last.is_a?(::Hash) ? args.pop : {}
-      status = args[0] || options[:status] || "subscribed"
-      since = args[1] || options[:since] || "2000-01-01 00:00:00"
-      start = args[2] || options[:start] || 0
-      limit = args[3] || options[:limit] || 100
       call("listMembers", list_id, status, since, start, limit)
     end
     
