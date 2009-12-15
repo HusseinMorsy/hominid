@@ -44,7 +44,7 @@ This means that you can _(for example)_ subscribe someone to a particular mailin
 
 <pre><code>h.subscribe(h.find_list_id_by_name("Mailing List Name"), "email@domain.com", {:FNAME => "Bob", :LNAME => "Smith"}, {:email_type => 'html'})</code></pre>
 
-Or to update a members information for a particular list:
+Or to update a subscriber to a particular list:
 
 <pre><code>h.update_member(h.find_list_id_by_name("Mailing List Name"), "old_email@domain.com", {:EMAIL => "new_email_@domain.com"}, 'html')</code></pre>
 
