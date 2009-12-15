@@ -269,7 +269,7 @@ module Hominid
       call("campaignSegmentTest", list_id, options)
     end
     
-    def subscribe(list_id, email, options = {})
+    def subscribe(list_id, email, merge_vars = {}, options = {})
       # Subscribe the provided email to a list.
       # 
       # Parameters:
@@ -280,7 +280,7 @@ module Hominid
       # Returns:
       # True on success, false on failure.
       #
-      merge_tags = clean_merge_tags options[:merge_tags]
+      merge_tags = clean_merge_tags merge_vars
       options = apply_defaults_to({:email_type => "html"}.merge(options))
       call(
         "listSubscribe",
