@@ -368,7 +368,7 @@ module Hominid
       call("listInterestGroupUpdate", list_id, old_name, new_name)
     end
     
-    def update_member(emal, merge_tags = {}, email_type = "html", replace_interests = true)
+    def update_member(list_id, email, merge_tags = {}, email_type = "html", replace_interests = true)
       # Edit the email address, merge fields, and interest groups for a list member.
       #
       # Parameters:
@@ -382,7 +382,7 @@ module Hominid
       # Returns:
       # True on success, false on failure
       #
-      call("listUpdateMember", list_id, current_email, merge_tags, email_type, replace_interests)
+      call("listUpdateMember", list_id, email, merge_tags, email_type, replace_interests)
     end
     
     def webhooks(list_id)
