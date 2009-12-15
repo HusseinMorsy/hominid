@@ -10,7 +10,6 @@ begin
     gem.email = "brian@terra-firma-design.com"
     gem.homepage = "http://github.com/bgetting/hominid"
     gem.authors = ["Brian Getting", "Michael Strüder"]
-    gem.add_development_dependency "shoulda"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
