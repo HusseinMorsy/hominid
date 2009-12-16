@@ -32,8 +32,8 @@ module Hominid
   
 end
 
-require 'hominid/base'
 require 'hominid/campaign'
 require 'hominid/helper'
 require 'hominid/list'
 require 'hominid/security'
+require 'hominid/base'
