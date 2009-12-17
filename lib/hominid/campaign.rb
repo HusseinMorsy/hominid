@@ -28,7 +28,19 @@ module Hominid
       #
       call("campaigns", {:campaign_id => campaign_id}).first
     end
-    
+
+    def find_campaign_by_web_id(campaign_web_id)
+      # Find a campaign by web_id
+      #
+      # Parameters:
+      # campaign_web_id (Integer) = The unique ID of the campaign to return.
+      #
+      # Returns:
+      # A single campaign.
+      #
+      call("campaigns").find {|campaign| campaign["web_id"] == campaign_web_id}
+    end
+        
     def find_campaigns_by_title(title)
       # Find a campaign by name
       #
