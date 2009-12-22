@@ -95,7 +95,7 @@ module Hominid
       call("campaigns", {:type => type}, start, limit)
     end
     
-    def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
+    def create_campaign(options = {}, content = {}, type = 'regular', segment_options = {}, type_opts = {})
       # Create a new draft campaign to send.
       #
       # Parameters:
