@@ -29,15 +29,11 @@ module Hominid
       end
     end
     
-    # --------------------------------
-    # Used internally by Hominid
-    # --------------------------------
-
-    def apply_defaults_to(options)
+    def apply_defaults_to(options) # :nodoc:
       @config.merge(options)
     end
     
-    def call(method, *args)
+    def call(method, *args) # :nodoc:
       @chimpApi.call(method, @config[:api_key], *args)
     rescue XMLRPC::FaultException => error
       # Handle common cases for which the Mailchimp API would raise Exceptions
@@ -65,7 +61,7 @@ module Hominid
       raise CommunicationError.new(error.message)
     end
     
-    def clean_merge_tags(merge_tags)
+    def clean_merge_tags(merge_tags) # :nodoc:
       return {} unless merge_tags.is_a? Hash
       merge_tags.each do |key, value|
         if merge_tags[key].is_a? String
@@ -76,7 +72,7 @@ module Hominid
       end
     end
     
-    def hash_to_object(object)
+    def hash_to_object(object) # :nodoc:
       return case object
       when Hash
         object = object.clone
