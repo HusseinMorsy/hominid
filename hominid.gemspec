@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Getting", "Michael Str\303\274der"]
-  s.date = %q{2009-12-17}
+  s.date = %q{2009-12-22}
   s.description = %q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
