@@ -341,17 +341,17 @@ module Hominid
     end
     alias :batch_unsubscribe :unsubscribe_many
     
+    # Change the name of an Interest Group.
+    #
+    # Parameters:
+    # * list_id  (String) = The mailing list ID value.
+    # * old_name (String) = The interest group name to be changed.
+    # * new_name (String) = The new interest group name to be set.
+    #
+    # Returns:
+    # True if successful, error code if not.
+    #
     def update_group(list_id, old_name, new_name)
-      # Change the name of an Interest Group.
-      #
-      # Parameters:
-      # * list_id  (String) = The mailing list ID value.
-      # * old_name (String) = The interest group name to be changed.
-      # * new_name (String) = The new interest group name to be set.
-      #
-      # Returns:
-      # True if successful, error code if not.
-      #
       call("listInterestGroupUpdate", list_id, old_name, new_name)
     end
     
