@@ -96,7 +96,6 @@ module Hominid
     # Create a new draft campaign to send.
     #
     # Parameters:
-    # * type            (String)  = One of "regular", "plaintext", "absplit", "rss", "trans" or "auto".
     # * options         (Hash)    = A hash of options for creating this campaign including:
     #   * :list_id        = (String)  The ID of the list to send this campaign to.
     #   * :subject        = (String)  The subject of the campaign.
@@ -119,13 +118,14 @@ module Hominid
     #   * :archive      (String)  = To send a Base64 encoded archive file for Mailchimp to import all media from.
     #   * :archive_type (String)  = Only necessary for the "archive" option. Supported formats are: zip, tar.gz, tar.bz2, tar, tgz, tbz. Defaults to zip. (optional)
     # * segment_options (Hash)    = Segmentation options. See the Mailchimp API documentation for more information.
+    # * type            (String)  = One of "regular", "plaintext", "absplit", "rss", "trans" or "auto".
     # * type_opts       (Hash)    = An array of options for this campaign type. See the Mailchimp API documentation for for more information.
     #
     # Returns:
     # The ID for the created campaign. (String)
     #
-    def create_campaign(type = 'regular', options = {}, content = {}, segment_options = {}, type_opts = {})
-      call("campaignCreate", type, options, content, segment_options, type_opts)
+    def create_campaign(options = {}, content = {}, segment_options = {}, campaign_type = 'regular', type_opts = {})
+      call("campaignCreate", campaign_type, options, content, segment_options, type_opts)
       # TODO: Should we return the new campaign instead of the ID returned from the API?
     end
 
