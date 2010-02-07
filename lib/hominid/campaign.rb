@@ -124,7 +124,7 @@ module Hominid
     # Returns:
     # The ID for the created campaign. (String)
     #
-    def create_campaign(options = {}, content = {}, segment_options = {}, campaign_type = 'regular', type_opts = {})
+    def create_campaign(options = {}, content = {}, campaign_type = 'regular', segment_options = {}, type_opts = {})
       call("campaignCreate", campaign_type, options, content, segment_options, type_opts)
       # TODO: Should we return the new campaign instead of the ID returned from the API?
     end
