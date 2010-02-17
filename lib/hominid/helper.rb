@@ -32,20 +32,15 @@ module Hominid
     def account_details
       hash_to_object(call("getAccountDetails"))
     end
-
-    # Send your HTML content to have the CSS inlined and optionally remove the original styles.
-    #
-    # Paramters:
-    # * html       (String)  = Your HTML content.
-    # * strip_css  (Boolean) = Whether you want the CSS <style> tags stripped from the returned document. Defaults to false.
+    
+    # Get the current Chimp Chatter messages for an account.
     #
     # Returns:
-    # Your HTML content with all CSS inlined, just like if we sent it. (String)
+    # The current Chimp Chatter for an account.
     #
-    def inline_css(html, strip_css = false)
-      call("inlineCss", html, strip_css)
+    def chatter
+      call("chimpChatter")
     end
-    alias :convert_css_to_inline :inline_css
     
     # Create a new folder to file campaigns in.
     #
@@ -54,8 +49,40 @@ module Hominid
     #
     # Returns:
     # The folder_id of the newly created folder. (Integer)
+    #
     def create_folder(name)
       call("createFolder", name)
+    end
+    
+    # Import Ecommerce Order Information to be used for Segmentation.
+    #
+    # Parameters:
+    # * order (Hash) = A hash of order information including:
+    #   * id          (String)  = The order id
+    #   * email_id    (String)  = Email id of the subscriber (mc_eid query string) (optional)
+    #   * email       (String)  = Email id of the subscriber (optional)
+    #   * total       (Double)  = Show only campaigns with this from_name.
+    #   * order_date  (String)  = The date of the order. (optional)
+    #   * shipping    (String)  = The total paid for shipping fees. (optional)
+    #   * tax         (String)  = The total tax paid. (optional)
+    #   * store_id    (String)  = A unique id for the store sending the order in
+    #   * store_name  (String)  = A readable name for the store, typicaly the hostname. (optional)
+    #   * plugin_id   (String)  = The MailChimp-assigned Plugin Id. Using 1214 for the moment.
+    #   * campaign_id (String)  = The campaign ID for this order. (mc_cid query string) (optional)
+    #   * items       (Array)   = The individual line items for an order, using the following keys:
+    #   * line_num       (Integer) = The line number of the item on the order. (optional)
+    #   * product_id     (Integer) = Internal product id.
+    #   * product_name   (String)  = The name for the product_id associated with the item.
+    #   * category_id    (Integer) = Internal id for the (main) category associated with product.
+    #   * category_name  (String)  = The category name for the category id.
+    #   * qty            (Double)  = The quantity of items ordered.
+    #   * cost           (Double)  = The cost of a single item (Ex. Not the extended cost of the line).
+    #
+    # Returns:
+    # True if successful, error code if not.
+    #
+    def ecomm_add_order(order)
+      call("campaignEcommAddOrder", order)
     end
     
     # Have HTML content auto-converted to a text-only format. You can send: plain HTML, an array of Template content,
@@ -73,6 +100,20 @@ module Hominid
       call("generateText", type, content)
     end
     
+    # Send your HTML content to have the CSS inlined and optionally remove the original styles.
+    #
+    # Parameters:
+    # * html       (String)  = Your HTML content.
+    # * strip_css  (Boolean) = Whether you want the CSS <style> tags stripped from the returned document. Defaults to false.
+    #
+    # Returns:
+    # Your HTML content with all CSS inlined, just like if we sent it. (String)
+    #
+    def inline_css(html, strip_css = false)
+      call("inlineCss", html, strip_css)
+    end
+    alias :convert_css_to_inline :inline_css
+    
     # "Ping" the MailChimp API - a simple method you can call that will return a constant value as long as everything
     # is good. Note than unlike most all of our methods, we don't throw an Exception if we are having issues. You will
     # simply receive a different string back that will explain our view on what is going on.
@@ -80,7 +121,7 @@ module Hominid
     # Returns:
     # "Everything's Chimpy!"
     #
-    def ping(options = {})
+    def ping()
       call("ping")
     end
     

@@ -30,6 +30,11 @@ module Hominid
     def find_list_id_by_web_id(list_web_id)
       call("lists").find {|list| list["web_id"] == list_web_id}["id"]
     end
+    
+    # Find all the mailing lists IDs that an email address is subscribed to
+    def find_list_ids_by_email(email)
+      call("listForEmail", email)
+    end
 
     # Get all email addresses that complained about a given list.
     #

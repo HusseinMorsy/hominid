@@ -164,9 +164,10 @@ module Hominid
     # Returns:
     # An array of abuse reports for this list in the format:
     #
-    def campaign_abuse_reports(campaign_id, start = 0, limit = 500, since = "2000-01-01 00:00:00") 
+    def abuse_reports(campaign_id, start = 0, limit = 500, since = "2000-01-01 00:00:00") 
       call("campaignAbuseReports", campaign_id, start, limit, since)
     end
+    alias :campaign_abuse_reports :abuse_reports
     
     # Retrieve the text presented in our app for how a campaign performed and any advice we may have for you - best
     # suited for display in customized reports pages. Note: some messages will contain HTML - clean tags as necessary.
@@ -182,6 +183,7 @@ module Hominid
     def advice(campaign_id)
       call("campaignAdvice", campaign_id)
     end
+    alias :campaign_advice :advice
     
     # Attach Ecommerce Order Information to a Campaign.
     #
@@ -212,7 +214,7 @@ module Hominid
       order = order.merge(:campaign_id => campaign_id)
       call("campaignEcommAddOrder", order)
     end
-    alias :ecomm_add_order :add_order
+    alias :campaign_ecomm_add_order :add_order
     
     # Retrieve the Google Analytics data we've collected for this campaign. Note, requires Google
     # Analytics Add-on to be installed and configured.
@@ -321,6 +323,18 @@ module Hominid
     end
     alias :delete_campaign :delete
     
+    # Retrieve the tracked eepurl mentions on Twitter
+    #
+    # Parameters:
+    # * campaign_id (String) = The ID of the campaign.
+    #
+    # Returns:
+    # An array of containing tweets and retweets that include this campaign's eepurl
+    def eep_url_stats(campaign_id)
+      call("campaignEepUrlStats", campaign_id)
+    end
+    alias :campaign_eep_url_stats :eep_url_stats
+    
     # Get the top 5 performing email domains for this campaign.
     #
     # Parameters:
@@ -384,6 +398,40 @@ module Hominid
       call("campaignEmailStatsAIMAll", campaign_id, start, limit)
     end
     alias :email_stats_aim_all :email_stats_all
+    
+    # Retrieve the countries and number of opens tracked for each.
+    #
+    # Parameters:
+    # * campaign_id (String) = The ID of the campaign.
+    #
+    # Returns:
+    # An array of countries where the campaign was opened:
+    # * code          (String)  = The ISO3166 2 digit country code.
+    # * name          (String)  = The country name (if available).
+    # * opens         (Integer) = The total number of opens that occurred in the country.
+    # * region_detail (Boolean) = Whether or not a subsequent call to campaignGeoOpensByCountry() will return anything
+    #
+    def geo_opens(campaign_id)
+      call("campaignGeoOpens", campaign_id)
+    end
+    alias :campaign_geo_opens :geo_opens
+    
+    # Retrieve the regions and number of opens tracked for a certain country. Email address are not returned.
+    #
+    # Parameters:
+    # * campaign_id (String) = The ID of the campaign.
+    # * code        (String) = An ISO3166 2 digit country code.
+    #
+    # Returns:
+    # An array of regions within the provided country where opens occurred:
+    # * code          (String)  = An internal code for the region. (can be blank)
+    # * name          (String)  = The name of the region (if available).
+    # * opens         (Integer) = The total number of opens that occurred in that region.
+    #
+    def geo_opens_for_country(campaign_id, code)
+      call("campaignGeoOpensForCountry", campaign_id, code)
+    end
+    alias :campaign_geo_opens_for_country :geo_opens_for_country
     
     # Get all email addresses with Hard Bounces for a given campaign.
     #
