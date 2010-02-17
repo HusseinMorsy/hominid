@@ -50,7 +50,7 @@ module Hominid
         raise APIError.new(error)
       end
     rescue RuntimeError => error
-      if error.message =~ /Wrong type NilClass\. Not allowed!/
+      if error.message =~ /Wrong type!/
         hashes = args.select{|a| a.is_a? Hash}
         errors = hashes.select{|k, v| v.nil? }.collect{ |k, v| "#{k} is Nil." }.join(' ')
         raise CommunicationError.new(errors)
