@@ -58,9 +58,9 @@ module Hominid
     #
     # Parameters:
     # * order (Hash) = A hash of order information including:
-    #   * id          (String)  = The order id
-    #   * email_id    (String)  = Email id of the subscriber (mc_eid query string) (optional)
-    #   * email       (String)  = Email id of the subscriber (optional)
+    #   * id          (String)  = The order id.
+    #   * email_id    (String)  = Email id of the subscriber. (mc_eid query string) (Required if no email)
+    #   * email       (String)  = Email id of the subscriber. (Required if no email_id)
     #   * total       (Double)  = Show only campaigns with this from_name.
     #   * order_date  (String)  = The date of the order. (optional)
     #   * shipping    (String)  = The total paid for shipping fees. (optional)
@@ -82,7 +82,7 @@ module Hominid
     # True if successful, error code if not.
     #
     def ecomm_add_order(order)
-      call("campaignEcommAddOrder", order)
+      call("ecommAddOrder", order)
     end
     
     # Have HTML content auto-converted to a text-only format. You can send: plain HTML, an array of Template content,
