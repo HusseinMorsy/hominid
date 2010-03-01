@@ -316,7 +316,7 @@ module Hominid
     # * list_id       (String)  = The mailing list ID value.
     # * current_email (String)  = The email address to unsubscribe OR the email "id".
     # * options       (Hash)    = A hash of unsubscribe options including:
-    #   * :delete_member (defaults to false)
+    #   * :delete_member (defaults to true)
     #   * :send_goodbye (defaults to false)
     #   * :send_notify (defaults to false).
     #
@@ -334,7 +334,7 @@ module Hominid
     # * list_id (String)  = The mailing list ID value.
     # * emails  (Array)   = An array of email addresses to unsubscribe.
     # * options (Hash)    = A hash of unsubscribe options including:
-    #   * :delete_member (defaults to false)
+    #   * :delete_member (defaults to true)
     #   * :send_goodbye (defaults to false)
     #   * :send_notify (defaults to false)
     #
