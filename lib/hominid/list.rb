@@ -33,7 +33,7 @@ module Hominid
     
     # Find all the mailing lists IDs that an email address is subscribed to
     def find_list_ids_by_email(email)
-      call("listForEmail", email)
+      call("listsForEmail", email)
     end
 
     # Get all email addresses that complained about a given list.
