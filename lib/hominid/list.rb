@@ -11,7 +11,7 @@ module Hominid
       call("lists").find {|list| list["name"] == list_name}
     end
     
-    # Find a mailing list ID by name
+    # Find a mailing list ID by name, returns nil if no list found
     def find_list_id_by_name(list_name)
       list = find_list_by_name(list_name)
       list && list["id"]
@@ -27,9 +27,10 @@ module Hominid
       call("lists").find {|list| list["web_id"] == list_web_id}
     end
     
-    # Find a mailing list ID by web_id
+    # Find a mailing list ID by web_id, returns nil if no list found
     def find_list_id_by_web_id(list_web_id)
-      call("lists").find {|list| list["web_id"] == list_web_id}["id"]
+      list = find_list_by_web_id(list_web_id)
+      list && list["id"]
     end
     
     # Find all the mailing lists IDs that an email address is subscribed to
