@@ -13,7 +13,8 @@ module Hominid
     
     # Find a mailing list ID by name
     def find_list_id_by_name(list_name)
-      call("lists").find {|list| list["name"] == list_name}["id"]
+      list = find_list_by_name(list_name)
+      list && list["id"]
     end
     
     # Find a mailing list by ID
