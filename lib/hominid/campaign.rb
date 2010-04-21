@@ -132,12 +132,13 @@ module Hominid
     # List all the folders for a user account.
     #
     # Returns:
-    # An array of templates for this campaign including:
+    # An array of folders (or [] if none exist) for this account including:
     # * folder_id (Integer) = Folder Id for the given folder, this can be used in the campaigns() function to filter on.
     # * name      (String)  = Name of the given folder.
     #    
     def folders
-      call("campaignFolders")
+      folders = call("campaignFolders")
+      folders == "" ? [] : folders
     end
 
     # Retrieve all templates defined for your user account.
@@ -572,14 +573,14 @@ module Hominid
     # Send a test of this campaign to the provided email address(es).
     #
     # Parameters:
-    # * campaign_id (String) = The ID of the campaign.
-    # * emails    (Hash)    = A hash of email addresses to receive the test message.
-    # * send_type (String)  = One of 'html', 'text' or nil (send both). Defaults to nil.
+    # * campaign_id (String)  = The ID of the campaign.
+    # * emails      (Array)   = An array of email addresses to receive the test message.
+    # * send_type   (String)  = One of 'html', 'text' or '' (send both). Defaults to ''.
     #
     # Returns:
     # True if successful.
     #
-    def send_test(campaign_id, emails = {}, send_type = nil)
+    def send_test(campaign_id, emails = {}, send_type = '')
       call("campaignSendTest", campaign_id, emails, send_type)
     end
     
