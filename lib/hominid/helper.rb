@@ -6,7 +6,7 @@ module Hominid
     # information like Credit Card numbers is available.
     #
     # Parameters:
-    # * options (Hash) = 
+    # * none 
     #
     # Returns:
     # An array of account details for this API key including:

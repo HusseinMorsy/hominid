@@ -41,11 +41,11 @@ module Hominid
     # Get all email addresses that complained about a given list.
     #
     # Parameters:
-    # * list_id (String)  = The mailing list ID value.
-    # * list_id (String)  = The mailing list ID value.
-    # * start (Integer)   = Page number to start at. Defaults to 0.
-    # * limit (Integer)   = Number of results to return. Defaults to 500. Upper limit is 1000.
-    # * since (DateTime)  = Only return email reports since this date. Must be in YYYY-MM-DD HH:II:SS format (GMT).
+    # * list_id (String)   = The mailing list ID value.
+    # * list_id (String)   = The mailing list ID value.
+    # * start   (Integer)  = Page number to start at. Defaults to 0.
+    # * limit   (Integer)  = Number of results to return. Defaults to 500. Upper limit is 1000.
+    # * since   (DateTime) = Only return email reports since this date. Must be in YYYY-MM-DD HH:II:SS format (GMT).
     #
     # Returns:
     # An array of abuse reports for this list including:
@@ -62,8 +62,8 @@ module Hominid
     # enabled, adding the first group will automatically turn them on.
     #
     # Parameters:
-    # * list_id (String)  = The mailing list ID value.
-    # * group (String) = The interest group to add.
+    # * list_id (String) = The mailing list ID value.
+    # * group   (String) = The interest group to add.
     #
     # Returns:
     # True if successful, error code if not.
@@ -73,10 +73,27 @@ module Hominid
     end
     alias :interest_group_add :create_group
     
+    # Add a new Interest Grouping - if interest groups for the List are not yet
+    # enabled, adding the first grouping will automatically turn them on.
+    #
+    # Parameters:
+    # * list_id (String) = The mailing list ID value.
+    # * name    (String) = The interest grouping to add - grouping names must be unique
+    # * type    (String) = The type of the grouping to add - one of "checkboxes", "hidden", "dropdown", "radio"
+    # * groups  (Array)  = The lists of initial group names to be added - at least 1 is required and the names must be unique within a grouping. If the number takes you over the 60 group limit, an error will be thrown.
+    #
+    # Returns:
+    # The new grouping id if the request succeeds, otherwise an error will be thrown.
+    #
+    def create_grouping(list_id, name, type, groups)
+      call("listInterestGroupingAdd", list_id, name, type, groups)
+    end
+    alias :interest_grouping_add :create_grouping
+    
     # Add a new merge tag to a given list
     #
     # Parameters:
-    # * list_id (String)  = The mailing list ID value.
+    # * list_id   (String)  = The mailing list ID value.
     # * tag       (String)  = The merge tag to add. Ex: FNAME
     # * name      (String)  = The long description of the tag being added, used for user displays.
     # * required  (Boolean) = TODO: set this up to accept the options available.
@@ -129,6 +146,20 @@ module Hominid
       call("listInterestGroupDel", list_id, group)
     end
     alias :interest_group_del :delete_group
+    
+    # Delete an existing Interest Grouping - this will permanently delete
+    # all contained interest groups and will remove those selections from all list members.
+    #
+    # Parameters:
+    # * grouping_id (String) = The interest grouping id.
+    #
+    # Returns:
+    # True if the request succeeds, otherwise an error will be thrown.
+    #
+    def delete_grouping(grouping_id)
+      call("listInterestGroupingDel", grouping_id)
+    end
+    alias :interest_grouping_del :delete_grouping
 
     # Delete a merge tag from a given list and all its members.
     # Seriously - the data is removed from all members as well!
@@ -178,6 +209,24 @@ module Hominid
     end
     alias :interest_groups :groups
     
+    # Get the list of interest groupings for a given list, including
+    # the label, form information, and included groups for each.
+    #
+    # Parameters:
+    # * list_id (String) = The list id to connect to.
+    #
+    # Returns:
+    # A struct of interest groupings for the list:
+    # * id         (String) = The id for the Grouping
+    # * name       (String) = Name for the Interest groups
+    # * form_field (String) = Gives the type of interest group: checkbox,radio,select
+    # * groups     (Array)  = Array of the grouping options including the "bit" value, "name", "display_order", and number of "subscribers" with the option selected.
+    #
+    def groupings(list_id)
+      call("listInterestGroupings", list_id)
+    end
+    alias :interest_groupings :groupings
+    
     # Access the Growth History by Month for a given list.
     #
     # Parameters:
@@ -203,16 +252,18 @@ module Hominid
     #
     # Returns:
     # An array of list member info with the following fields:
-    # * id          (String)  = The unique id for this email address on an account.
-    # * email       (String)  = The email address associated with this record.
-    # * email_type  (String)  = The type of emails this customer asked to get: html, text, or mobile.
-    # * merges      (Array)   = An associative array of all the merge tags and the data for those tags for this email address. Note: Interest Groups are returned as comma delimited strings - if a group name contains a comma, it will be escaped with a backslash. ie, "," => "\,"
-    # * status      (String)  = The subscription status for this email address, either subscribed, unsubscribed or cleaned.
-    # * ip_opt      (String)  = IP Address this address opted in from.
-    # * ip_signup   (String)  = IP Address this address signed up from.
-    # * campaign_id (String)  = If the user is unsubscribed and they unsubscribed from a specific campaign, that campaign_id will be listed, otherwise this is not returned.
-    # * list        (Array)   = An associative array of the other lists this member belongs to - the key is the list id and the value is their status in that list.
-    # * timestamp   (Date)    = The time this email address was added to the list
+    # * id            (String)  = The unique id for this email address on an account.
+    # * email         (String)  = The email address associated with this record.
+    # * email_type    (String)  = The type of emails this customer asked to get: html, text, or mobile.
+    # * merges        (Array)   = An associative array of all the merge tags and the data for those tags for this email address. Note: Interest Groups are returned as comma delimited strings - if a group name contains a comma, it will be escaped with a backslash. ie, "," => "\,"
+    # * status        (String)  = The subscription status for this email address, either subscribed, unsubscribed or cleaned.
+    # * ip_opt        (String)  = IP Address this address opted in from.
+    # * ip_signup     (String)  = IP Address this address signed up from.
+    # * campaign_id   (String)  = If the user is unsubscribed and they unsubscribed from a specific campaign, that campaign_id will be listed, otherwise this is not returned.
+    # * lists         (Array)   = An associative array of the other lists this member belongs to - the key is the list id and the value is their status in that list.
+    # * timestamp     (Date)    = The time this email address was added to the list
+    # * info_changed  (Date)    = The last time this record was changed. If the record is old enough, this may be blank.
+    # * web_id        (Integer) = The Member id used in our web app, allows you to create a link directly to it.
     #
     def member_info(list_id, email)
       call("listMemberInfo", list_id, email)
@@ -360,6 +411,20 @@ module Hominid
     #
     def update_group(list_id, old_name, new_name)
       call("listInterestGroupUpdate", list_id, old_name, new_name)
+    end
+    
+    # Update an existing Interest Grouping.
+    #
+    # Parameters:
+    # * grouping_id (String) = The interest grouping ID.
+    # * name        (String) = The name of the field to update - either "name" or "type".
+    # * value       (String) = The new value of the field.
+    #
+    # Returns:
+    # True if successful, error code if not.
+    #
+    def update_grouping(grouping_id, name, value)
+      call("listInterestGroupingUpdate", grouping_id, name, value)
     end
     
     # Edit the email address, merge fields, and interest groups for a list member.
