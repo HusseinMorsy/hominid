@@ -62,14 +62,15 @@ module Hominid
     # enabled, adding the first group will automatically turn them on.
     #
     # Parameters:
-    # * list_id (String) = The mailing list ID value.
-    # * group   (String) = The interest group to add.
+    # * list_id       (String) = The mailing list ID value.
+    # * group         (String) = The interest group to add.
+    # * grouping_id   (String) = The grouping to add the new group to. If not supplied, the first grouping on the list is used.
     #
     # Returns:
     # True if successful, error code if not.
     #
-    def create_group(list_id, group)
-      call("listInterestGroupAdd", list_id, group)
+    def create_group(list_id, group, grouping_id)
+      call("listInterestGroupAdd", list_id, group, grouping_id)
     end
     alias :interest_group_add :create_group
     
