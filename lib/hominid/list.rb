@@ -152,7 +152,7 @@ module Hominid
     # all contained interest groups and will remove those selections from all list members.
     #
     # Parameters:
-    # * grouping_id (String) = The interest grouping id.
+    # * grouping_id (Integer) = The interest grouping id.
     #
     # Returns:
     # True if the request succeeds, otherwise an error will be thrown.
