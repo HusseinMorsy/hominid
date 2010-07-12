@@ -688,7 +688,7 @@ module Hominid
     # Returns:
     # An array of email addresses that unsubscribed from this campaign.
     #
-    def unsubsribes(campaign_id, start = 0, limit = 1000)
+    def unsubscribes(campaign_id, start = 0, limit = 1000)
       call("campaignUnsubscribes", campaign_id, start, limit)
     end
     
