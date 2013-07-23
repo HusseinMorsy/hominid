@@ -27,6 +27,7 @@ module Hominid
       else
         @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
       end
+      @chimpApi.http_header_extra = { 'accept-encoding' => 'identity' }
     end
     
     def apply_defaults_to(options) # :nodoc:
